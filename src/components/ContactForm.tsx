@@ -78,6 +78,15 @@ function ContactForm({ onSubmit }: ContactFormProps): ReactNode {
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault()
+
+    // Honeypot: humans never see this field, so if it's filled it's almost
+    // certainly a bot. Pretend it succeeded and silently drop it.
+    const honeypot = event.currentTarget.elements.namedItem('botcheck')
+    if (honeypot instanceof HTMLInputElement && honeypot.checked) {
+      setStatus('success')
+      return
+    }
+
     const nextErrors = validate(data)
     setErrors(nextErrors)
     if (Object.keys(nextErrors).length > 0) return
@@ -107,6 +116,16 @@ function ContactForm({ onSubmit }: ContactFormProps): ReactNode {
 
   return (
     <form className="contact-form" onSubmit={handleSubmit} noValidate>
+      {/* Honeypot — hidden from real users; bots that fill it are dropped. */}
+      <input
+        type="checkbox"
+        name="botcheck"
+        className="contact-honeypot"
+        tabIndex={-1}
+        autoComplete="off"
+        aria-hidden="true"
+      />
+
       <div className="contact-form-row">
         <label className="contact-field">
           <span className="contact-label">First name</span>

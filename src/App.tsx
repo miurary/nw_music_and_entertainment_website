@@ -1,37 +1,9 @@
-import { useState, type ReactNode } from 'react'
+import { useState } from 'react'
 import './App.css'
-import Carousel from './components/Carousel'
-import type { CarouselItem } from './components/Carousel'
-
-type Page = {
-  id: string
-  label: string
-  title: string
-  body: ReactNode
-}
-
-const ARCADE_GAMES: CarouselItem[] = [
-  {
-    title: 'Jet Pong',
-    imageUrl: 'https://www.jet-pong.com/wp-content/uploads/2022/05/home_page_placeholder_new.jpg',
-  },
-  {
-    title: 'Lucky Duck Claw Machine',
-    imageUrl: 'https://www.betson.com/wp-content/uploads/2022/04/Lucky-Duck-Left.jpg',
-  },
-  {
-    title: 'Golden Tee PGA Tour',
-    imageUrl: 'https://www.betson.com/wp-content/uploads/2021/04/Golden-Tee-PGA-Tour.jpg',
-  },
-  {
-    title: 'Big Buck Hunter Reloaded',
-    imageUrl: 'https://www.gameroomshop.com/cdn/shop/files/big-buck-hunter-reloaded-panorama-shooting-arcade-game-online-version-monthly-subscription-2_1024x1024.jpg?v=1701772649',
-  },
-  {
-    title: 'Pinball',
-    imageUrl: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQNuOOkgtdrR_pqsbDgGioFKVYllAf7o9TkjE3gNdBRDw&s=10'
-  }
-]
+import CardGrid from './components/CardGrid'
+import locationsMap from './assets/locations.webp'
+import type { Page } from './utils/types'
+import { ARCADE_GAMES, POOL_TABLES, JUKEBOXES } from './utils/types'
 
 const PAGES: Page[] = [
   {
@@ -74,7 +46,7 @@ const PAGES: Page[] = [
           Classic cabinets, modern hits, and redemption games. We can build a
           lineup tailored to your venue and rotate titles to keep things fresh.
         </p>
-        <Carousel
+        <CardGrid
           ariaLabel="Games on Site"
           items={ARCADE_GAMES}
         />
@@ -86,10 +58,16 @@ const PAGES: Page[] = [
     label: 'Jukeboxes',
     title: 'Jukeboxes',
     body: (
-      <p>
-        Digital and classic jukeboxes with full catalogs and easy management.
-        Perfect for bars, restaurants, and game rooms.
-      </p>
+      <>
+        <p>
+          Digital jukeboxes with full catalogs and easy management.
+          Perfect for bars, restaurants, and game rooms.
+        </p>
+        <CardGrid
+          ariaLabel="Jukeboxes"
+          items={JUKEBOXES}
+        />
+      </>
     ),
   },
   {
@@ -97,21 +75,16 @@ const PAGES: Page[] = [
     label: 'Pool Tables',
     title: 'Pool Tables',
     body: (
-      <p>
-        Tournament-grade and recreational pool tables, professionally leveled
-        and maintained with regular recloth and repair service.
-      </p>
-    ),
-  },
-  {
-    id: 'photobooths',
-    label: 'Photo Booths',
-    title: 'Photo Booths',
-    body: (
-      <p>
-        Modern photo booths for events and permanent installations. Custom
-        branding and prints available.
-      </p>
+      <>
+        <p>
+          Tournament-grade and recreational pool tables, professionally leveled
+          and maintained with regular recloth and repair service.
+        </p>
+        <CardGrid
+          ariaLabel="Pool Tables"
+          items={POOL_TABLES}
+        />
+      </>
     ),
   },
   {
@@ -119,10 +92,17 @@ const PAGES: Page[] = [
     label: 'Locations',
     title: 'Locations',
     body: (
-      <p>
-        We serve venues throughout the Pacific Northwest. Reach out to confirm
-        coverage in your area.
-      </p>
+      <>
+        <p>
+          We serve venues throughout the Pacific Northwest. Reach out to confirm
+          coverage in your area.
+        </p>
+        <img
+          className="location-map"
+          src={locationsMap}
+          alt="Map of our service area across the Pacific Northwest"
+        />
+      </>
     ),
   },
   {

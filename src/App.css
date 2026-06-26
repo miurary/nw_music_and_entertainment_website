@@ -126,7 +126,7 @@
 }
 
 .content-inner {
-  max-width: 720px;
+  width: 100%;
   color: var(--text-muted);
   font-size: 17px;
   line-height: 1.6;
@@ -134,6 +134,17 @@
 
 .content-inner p {
   margin: 0 0 16px;
+}
+
+/* Map fills the content width and as much height as is left below the
+   intro text, without cropping. */
+.location-map {
+  display: block;
+  width: 100%;
+  height: auto;
+  max-height: calc(100vh - var(--header-height) - 160px);
+  object-fit: contain;
+  border-radius: 12px;
 }
 
 .content-inner a {

@@ -1,6 +1,8 @@
 import { useState } from 'react'
 import './App.css'
 import CardGrid from './components/CardGrid'
+import ContactForm from './components/ContactForm'
+import { submitInquiry } from './utils/submitInquiry'
 import locationsMap from './assets/locations.webp'
 import type { Page } from './utils/types'
 import { ARCADE_GAMES, POOL_TABLES, JUKEBOXES } from './utils/types'
@@ -30,9 +32,10 @@ const PAGES: Page[] = [
     title: 'About Us',
     body: (
       <p>
-        For years we&apos;ve provided, installed, and serviced coin-op and
-        free-play entertainment equipment. Our team handles everything from
-        delivery to ongoing maintenance so your machines stay in top shape.
+        30 years of experience in the amusement and entertainment industry. 
+        Our team handles everything from planning to installation and maintenance.
+        Responsive to your needs. Give us a call if things break. 
+        A partner you can trust to keep your entertainment equipment running smoothly.
       </p>
     ),
   },
@@ -111,11 +114,11 @@ const PAGES: Page[] = [
     title: 'Contact Us',
     body: (
       <>
-        <p>Ready to get started or have a machine that needs service?</p>
         <p>
-          Email us at <a href="mailto:info@example.com">info@example.com</a> or
-          call (555) 123-4567.
+          Ready to get started or have a machine that needs service? Send us a
+          note and we&apos;ll be in touch.
         </p>
+        <ContactForm onSubmit={submitInquiry} />
       </>
     ),
   },

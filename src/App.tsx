@@ -15,7 +15,7 @@ const PAGES: Page[] = [
     body: (
       <>
         <p>
-          Welcome to NW Music &amp; Entertainment. We bring arcade games,
+          Welcome to NW Entertainment &amp; Music. We bring arcade games,
           jukeboxes, pool tables, and full-service amusement equipment to
           businesses across the region.
         </p>
@@ -134,7 +134,7 @@ function App() {
         <div className="sidebar-brand">
           <span className="brand-mark">NW</span>
           <span className="brand-text">
-            Music &amp;<br />Entertainment
+            Entertainment &amp;<br />Music
           </span>
         </div>
         <nav className="sidebar-nav">

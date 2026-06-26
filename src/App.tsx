@@ -1,7 +1,39 @@
-import { useState } from 'react'
+import { useState, type ReactNode } from 'react'
 import './App.css'
+import Carousel from './components/Carousel'
+import type { CarouselItem } from './components/Carousel'
 
-const PAGES = [
+type Page = {
+  id: string
+  label: string
+  title: string
+  body: ReactNode
+}
+
+const ARCADE_GAMES: CarouselItem[] = [
+  {
+    title: 'Jet Pong',
+    imageUrl: 'https://www.jet-pong.com/wp-content/uploads/2022/05/home_page_placeholder_new.jpg',
+  },
+  {
+    title: 'Lucky Duck Claw Machine',
+    imageUrl: 'https://www.betson.com/wp-content/uploads/2022/04/Lucky-Duck-Left.jpg',
+  },
+  {
+    title: 'Golden Tee PGA Tour',
+    imageUrl: 'https://www.betson.com/wp-content/uploads/2021/04/Golden-Tee-PGA-Tour.jpg',
+  },
+  {
+    title: 'Big Buck Hunter Reloaded',
+    imageUrl: 'https://www.gameroomshop.com/cdn/shop/files/big-buck-hunter-reloaded-panorama-shooting-arcade-game-online-version-monthly-subscription-2_1024x1024.jpg?v=1701772649',
+  },
+  {
+    title: 'Pinball',
+    imageUrl: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQNuOOkgtdrR_pqsbDgGioFKVYllAf7o9TkjE3gNdBRDw&s=10'
+  }
+]
+
+const PAGES: Page[] = [
   {
     id: 'home',
     label: 'Home',
@@ -37,10 +69,16 @@ const PAGES = [
     label: 'Arcade Games',
     title: 'Arcade Games',
     body: (
-      <p>
-        Classic cabinets, modern hits, and redemption games. We can build a
-        lineup tailored to your venue and rotate titles to keep things fresh.
-      </p>
+      <>
+        <p>
+          Classic cabinets, modern hits, and redemption games. We can build a
+          lineup tailored to your venue and rotate titles to keep things fresh.
+        </p>
+        <Carousel
+          ariaLabel="Games on Site"
+          items={ARCADE_GAMES}
+        />
+      </>
     ),
   },
   {
@@ -105,7 +143,7 @@ const PAGES = [
 
 function App() {
   const [activeId, setActiveId] = useState(PAGES[0].id)
-  const activePage = PAGES.find((p) => p.id === activeId)
+  const activePage = PAGES.find((p) => p.id === activeId) ?? PAGES[0]
 
   return (
     <div className="layout">

@@ -50,6 +50,21 @@
   box-shadow: 0 0 0 3px rgba(170, 59, 255, 0.15);
 }
 
+.contact-field input[aria-invalid='true'],
+.contact-field textarea[aria-invalid='true'] {
+  border-color: #c0392b;
+}
+
+.contact-field input[aria-invalid='true']:focus,
+.contact-field textarea[aria-invalid='true']:focus {
+  box-shadow: 0 0 0 3px rgba(192, 57, 43, 0.15);
+}
+
+.contact-field-error {
+  font-size: 13px;
+  color: #c0392b;
+}
+
 .contact-submit {
   align-self: flex-start;
   appearance: none;

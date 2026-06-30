@@ -109,6 +109,15 @@
   text-shadow: var(--engrave);
 }
 
+.spec-details {
+  margin: 2px 0 0;
+  max-width: 46ch;
+  font-family: var(--body);
+  font-size: 16px;
+  line-height: 1.6;
+  color: var(--text);
+}
+
 /* a short brass rule that "draws" in when the row reveals */
 .spec-rule {
   display: block;

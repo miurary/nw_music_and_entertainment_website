@@ -90,7 +90,8 @@ const PAGES: Page[] = [
       <>
         <p>
           Tournament-grade and recreational pool tables, professionally leveled
-          and maintained with regular recloth and repair service.
+          and maintained with regular recloth and repair service. All available in 
+          7', 8', and 9' sizes. Minimum room sizes from 14.5' x 18' to 15.5' x 19'.
         </p>
         <CardShowcase
           ariaLabel="Pool Tables"

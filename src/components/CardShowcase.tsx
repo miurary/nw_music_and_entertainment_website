@@ -77,6 +77,9 @@ function CardShowcase({
             )}
             <h3 className="spec-title">{item.title}</h3>
             <span className="spec-rule" aria-hidden="true" />
+            {item.details && <p className="spec-details">{item.details}</p>}
+            {item.dimensions && <p className="spec-details">{item.dimensions}</p>}
+            {item.weight && <p className="spec-details">{item.weight}</p>}
           </div>
         </li>
       ))}

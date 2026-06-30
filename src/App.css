@@ -353,4 +353,11 @@
     padding-left: 20px;
     padding-right: 20px;
   }
+  /* The ? tagline wraps to several lines on narrow screens, pushing the fixed
+     header past the height the content reserves and crowding the page text.
+     It's redundant with the banner art here, so drop it on mobile and let the
+     header keep its declared height. */
+  .header .diamond-rule {
+    display: none;
+  }
 }

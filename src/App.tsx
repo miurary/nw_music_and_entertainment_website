@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import './App.css'
 import CardShowcase from './components/CardShowcase'
 import ContactForm from './components/ContactForm'
@@ -138,6 +138,12 @@ const PAGES: Page[] = [
 function App() {
   const [activeId, setActiveId] = useState(PAGES[0].id)
   const activePage = PAGES.find((p) => p.id === activeId) ?? PAGES[0]
+
+  // Switching tabs swaps the body within one scrolling document, so reset the
+  // scroll position to the top whenever the active page changes.
+  useEffect(() => {
+    window.scrollTo(0, 0)
+  }, [activeId])
 
   return (
     <div className="layout">

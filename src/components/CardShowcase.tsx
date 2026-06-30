@@ -58,12 +58,28 @@ function CardShowcase({
             {item.text != null ? (
               <div className="spec-photo-text">{item.text}</div>
             ) : (
-              <img
-                className="spec-photo-image"
-                src={item.imageUrl ?? item.imageAltUrl ?? PLACEHOLDER_IMAGE_URL}
-                alt={item.title}
-                loading="lazy"
-              />
+              (() => {
+                const src =
+                  item.imageUrl ?? item.imageAltUrl ?? PLACEHOLDER_IMAGE_URL
+                return (
+                  <div className="spec-photo-frame">
+                    {/* A blurred, darkened copy of the same photo fills the
+                        letterbox space so off-shape images have no flat dead
+                        area behind them. */}
+                    <div
+                      className="spec-photo-blur"
+                      style={{ backgroundImage: `url(${src})` }}
+                      aria-hidden="true"
+                    />
+                    <img
+                      className="spec-photo-image"
+                      src={src}
+                      alt={item.title}
+                      loading="lazy"
+                    />
+                  </div>
+                )
+              })()
             )}
           </figure>
           <div className="spec-plate">

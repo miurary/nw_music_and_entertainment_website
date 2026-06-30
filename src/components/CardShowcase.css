@@ -43,14 +43,36 @@
   box-shadow: var(--shadow-plate);
 }
 
-.spec-photo-image {
-  display: block;
+/* Fixed-shape window: keeps every tile the same size while the photo inside
+   is shown whole (contain) over a blurred fill of itself. */
+.spec-photo-frame {
+  position: relative;
   width: 100%;
   aspect-ratio: 4 / 3;
-  object-fit: cover;
   border-radius: 7px;
   border: 1px solid var(--border-dark);
+  overflow: hidden;
   background: #0c0d10;
+}
+
+/* blurred, darkened copy of the photo behind the sharp one */
+.spec-photo-blur {
+  position: absolute;
+  inset: 0;
+  background-size: cover;
+  background-position: center;
+  /* scale up so the blur's soft edges never reveal the frame */
+  transform: scale(1.15);
+  filter: blur(20px) brightness(0.5) saturate(1.1);
+}
+
+.spec-photo-image {
+  position: relative;
+  z-index: 1;
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
   transition: filter 0.25s ease;
 }
 
@@ -155,7 +177,7 @@
     border-top-right-radius: 0;
     padding: 22px 24px;
   }
-  .spec-photo-image {
+  .spec-photo-frame {
     aspect-ratio: 16 / 10;
   }
 }

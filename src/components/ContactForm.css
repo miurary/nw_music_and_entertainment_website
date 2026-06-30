@@ -1,8 +1,10 @@
+/* Contact form — fields as recessed slots in the metal, brass submit lever. */
 .contact-form {
   display: flex;
   flex-direction: column;
   gap: 18px;
   max-width: 640px;
+  margin-top: 24px;
 }
 
 /* Honeypot: kept out of view and out of the layout/tab order, but not
@@ -31,22 +33,25 @@
 }
 
 .contact-label {
+  font-family: var(--display);
   font-size: 14px;
-  font-weight: 600;
-  color: var(--text, #2c2a35);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  color: var(--ink-soft);
 }
 
 .contact-field input,
 .contact-field textarea {
-  font: inherit;
+  font-family: var(--body);
   font-size: 15px;
-  color: var(--text, #2c2a35);
-  background: #fff;
-  border: 1px solid var(--header-border, #e5e4e7);
-  border-radius: 8px;
-  padding: 10px 12px;
-  box-sizing: border-box;
-  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+  color: var(--ink);
+  background: #eceef0;
+  border: 1px solid var(--border);
+  border-radius: 7px;
+  padding: 11px 13px;
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.12);
+  transition: border-color 0.18s ease, box-shadow 0.18s ease;
 }
 
 .contact-field textarea {
@@ -56,46 +61,60 @@
 .contact-field input:focus,
 .contact-field textarea:focus {
   outline: none;
-  border-color: var(--sidebar-active, #aa3bff);
-  box-shadow: 0 0 0 3px rgba(170, 59, 255, 0.15);
+  border-color: var(--brass);
+  box-shadow:
+    inset 0 2px 4px rgba(0, 0, 0, 0.12),
+    0 0 0 3px var(--brass-bg);
 }
 
 .contact-field input[aria-invalid='true'],
 .contact-field textarea[aria-invalid='true'] {
-  border-color: #c0392b;
+  border-color: #b23a2c;
 }
 
 .contact-field input[aria-invalid='true']:focus,
 .contact-field textarea[aria-invalid='true']:focus {
-  box-shadow: 0 0 0 3px rgba(192, 57, 43, 0.15);
+  box-shadow:
+    inset 0 2px 4px rgba(0, 0, 0, 0.12),
+    0 0 0 3px rgba(178, 58, 44, 0.18);
 }
 
 .contact-field-error {
   font-size: 13px;
-  color: #c0392b;
+  color: #9c2f23;
 }
 
 .contact-submit {
   align-self: flex-start;
   appearance: none;
-  border: none;
-  border-radius: 8px;
-  background: var(--sidebar-active, #aa3bff);
-  color: #fff;
-  font: inherit;
-  font-size: 15px;
-  font-weight: 600;
-  padding: 12px 28px;
+  border: 1px solid rgba(0, 0, 0, 0.35);
+  border-radius: 7px;
+  background: linear-gradient(160deg, var(--brass-hi), var(--brass) 60%, #8a6420);
+  color: #1d1503;
+  font-family: var(--display);
+  font-size: 17px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 1.2px;
+  padding: 12px 34px;
   cursor: pointer;
-  transition: opacity 0.15s ease, transform 0.05s ease;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.5),
+    inset 0 -2px 4px rgba(0, 0, 0, 0.25),
+    0 3px 6px -2px rgba(0, 0, 0, 0.4);
+  text-shadow: 0 1px 0 rgba(255, 255, 255, 0.3);
+  transition: transform 0.06s ease, filter 0.18s ease, box-shadow 0.06s ease;
 }
 
 .contact-submit:hover:not(:disabled) {
-  opacity: 0.9;
+  filter: brightness(1.06);
 }
 
 .contact-submit:active:not(:disabled) {
-  transform: translateY(1px);
+  transform: translateY(2px);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.4),
+    inset 0 2px 6px rgba(0, 0, 0, 0.35);
 }
 
 .contact-submit:disabled {
@@ -105,25 +124,34 @@
 
 .contact-error {
   margin: 0;
-  color: #c0392b;
+  color: #9c2f23;
   font-size: 14px;
 }
 
 .contact-success {
   max-width: 640px;
-  background: #fff;
-  border: 1px solid var(--header-border, #e5e4e7);
-  border-left: 4px solid var(--sidebar-active, #aa3bff);
-  border-radius: 12px;
+  margin-top: 24px;
+  background: linear-gradient(160deg, var(--panel), var(--plate));
+  border: 1px solid var(--border);
+  border-left: 4px solid var(--brass);
+  border-radius: 10px;
   padding: 28px;
+  box-shadow: var(--shadow-plate);
+  animation: rise 0.34s ease both;
 }
 
 .contact-success-title {
-  margin: 0 0 8px;
-  font-size: 22px;
-  color: var(--text, #2c2a35);
+  margin: 0 0 10px;
+  font-family: var(--display);
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+  font-size: 24px;
+  color: var(--ink);
+  text-shadow: var(--emboss-light);
 }
 
 .contact-success p {
   margin: 0;
+  color: var(--ink-soft);
 }

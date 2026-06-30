@@ -19,10 +19,17 @@ const PAGES: Page[] = [
           jukeboxes, pool tables, and full-service amusement equipment to
           businesses across the region.
         </p>
-        <p>
-          Use the menu on the left to explore what we offer, find a location,
-          or get in touch.
-        </p>
+        <div className="contact-card">
+          <p className="contact-name">Blake Miura</p>
+          <p className="contact-line">
+            <a href="tel:+15037097216">(503) 709-7216</a>
+          </p>
+          <p className="contact-line">
+            <a href="mailto:nwentertainmentandmusic@gmail.com">
+              nwentertainmentandmusic@gmail.com
+            </a>
+          </p>
+        </div>
       </>
     ),
   },
@@ -154,7 +161,16 @@ function App() {
       </aside>
 
       <header className="header">
-        <h1 className="header-title">{activePage.title}</h1>
+        <h1 className="header-title" key={activePage.id}>
+          {activePage.title}
+        </h1>
+        <ul className="diamond-rule" aria-hidden="true">
+          <li>Amusement Devices</li>
+          <li>Pool Tables</li>
+          <li>Jukeboxes</li>
+          <li>Videos</li>
+          <li>ATM&apos;s</li>
+        </ul>
       </header>
 
       <main className="content">

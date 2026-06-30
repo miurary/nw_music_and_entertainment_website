@@ -1,28 +1,49 @@
+/* Cards as framed equipment plates: a metal bezel around each photo, with an
+   engraved title bar beneath and a brass edge that lights on hover. */
 .card-grid {
   list-style: none;
-  margin: 0;
+  margin: 28px 0 0;
   padding: 0;
   width: 100%;
   display: grid;
   /* grid-template-columns is set inline from the minCardWidth prop. */
-  gap: 20px;
+  gap: 22px;
 }
 
 .card-grid-card {
+  position: relative;
   display: flex;
   flex-direction: column;
-  gap: 10px;
-  background: #fff;
-  border: 1px solid var(--header-border, #e5e4e7);
-  border-radius: 12px;
+  background: linear-gradient(160deg, var(--panel), var(--plate) 70%, var(--plate-lo));
+  border: 1px solid var(--border);
+  border-radius: 10px;
   overflow: hidden;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
-  transition: transform 0.15s ease, box-shadow 0.15s ease;
+  box-shadow: var(--shadow-plate);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+/* brass accent line along the bottom edge, drawn on hover */
+.card-grid-card::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--brass), var(--brass-hi));
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.28s ease;
 }
 
 .card-grid-card:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.1);
+  transform: translateY(-4px);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.6),
+    0 18px 30px -16px rgba(0, 0, 0, 0.6);
+}
+.card-grid-card:hover::after {
+  transform: scaleX(1);
 }
 
 .card-grid-card-image {
@@ -30,6 +51,15 @@
   aspect-ratio: 4 / 3;
   object-fit: cover;
   display: block;
+  margin: 6px 6px 0;
+  width: calc(100% - 12px);
+  border-radius: 6px;
+  border: 1px solid var(--border-dark);
+  background: #0c0d10;
+  transition: filter 0.2s ease;
+}
+.card-grid-card:hover .card-grid-card-image {
+  filter: saturate(1.08) contrast(1.04);
 }
 
 .card-grid-card-text {
@@ -37,15 +67,19 @@
   aspect-ratio: 4 / 3;
   display: flex;
   align-items: center;
-  color: var(--text-muted, #6b6375);
+  color: var(--text-muted);
   font-size: 15px;
-  line-height: 1.5;
+  line-height: 1.55;
 }
 
 .card-grid-card-title {
   margin: 0;
-  padding: 0 16px 16px;
-  font-size: 15px;
-  font-weight: 600;
-  color: var(--text, #2c2a35);
+  padding: 12px 14px 14px;
+  font-family: var(--display);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.7px;
+  font-size: 16px;
+  color: var(--ink);
+  text-shadow: var(--emboss-light);
 }

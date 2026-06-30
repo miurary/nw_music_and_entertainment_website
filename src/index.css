@@ -1,25 +1,54 @@
+/* ===========================================================================
+   NW Entertainment & Music — "Chrome Plate / Vintage Trade"
+   A tactile theme drawn straight from the company business card: a brushed
+   aluminum plate, engraved black condensed-caps headers, diamond rules,
+   and a single warm-brass accent. Built to feel like a 30-year trade shop,
+   not a template.
+   =========================================================================== */
+
 :root {
-  --text: #6b6375;
-  --text-h: #08060d;
-  --bg: #fff;
-  --border: #e5e4e7;
-  --code-bg: #f4f3ec;
-  --accent: #aa3bff;
-  --accent-bg: rgba(170, 59, 255, 0.1);
-  --accent-border: rgba(170, 59, 255, 0.5);
-  --social-bg: rgba(244, 243, 236, 0.5);
-  --shadow:
-    rgba(0, 0, 0, 0.1) 0 10px 15px -3px, rgba(0, 0, 0, 0.05) 0 4px 6px -2px;
+  /* --- Metal & ink palette ------------------------------------------------ */
+  --plate: #c5c7ca; /* brushed silver — the card stock */
+  --plate-hi: #e9ebee; /* polished highlight */
+  --plate-lo: #9da0a5; /* shadowed metal */
+  --panel: #d7d9dc; /* lighter working surface */
+  --gunmetal: #1a1c20; /* dark steel — sidebar */
+  --gunmetal-hi: #2b2e34;
 
-  --sans: system-ui, 'Segoe UI', Roboto, sans-serif;
-  --heading: system-ui, 'Segoe UI', Roboto, sans-serif;
-  --mono: ui-monospace, Consolas, monospace;
+  --ink: #131319; /* near-black engraving */
+  --ink-soft: #3f4147;
+  --text: #43454b; /* body copy on metal */
+  --text-muted: #6c6f76;
+  --text-on-dark: #c3c6cc;
 
-  font: 18px/145% var(--sans);
-  letter-spacing: 0.18px;
-  color-scheme: light dark;
+  --brass: #b1812b; /* warm metallic accent */
+  --brass-hi: #d8af55;
+  --brass-bg: rgba(177, 129, 43, 0.12);
+  --felt: #1f5e52; /* pool-felt deep green, secondary accent */
+  --felt-hi: #2e8576;
+
+  --border: #a9acb1;
+  --border-dark: rgba(0, 0, 0, 0.28);
+
+  /* engraved text: dark cut on top, light catch on the bottom edge */
+  --engrave: 0 1px 0 rgba(255, 255, 255, 0.55), 0 -1px 0 rgba(0, 0, 0, 0.25);
+  --emboss-light: 0 1px 0 rgba(255, 255, 255, 0.45);
+
+  --shadow-plate:
+    inset 0 1px 0 rgba(255, 255, 255, 0.5),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.18),
+    0 12px 28px -14px rgba(0, 0, 0, 0.5);
+
+  /* --- Type --------------------------------------------------------------- */
+  --display: 'Saira Condensed', 'Arial Narrow', sans-serif;
+  --body: 'Bitter', Georgia, 'Times New Roman', serif;
+
+  --sidebar-width: 268px;
+  --header-height: 116px;
+
+  font: 17px/1.6 var(--body);
   color: var(--text);
-  background: var(--bg);
+  color-scheme: light;
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
@@ -30,74 +59,112 @@
   }
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --text: #9ca3af;
-    --text-h: #f3f4f6;
-    --bg: #16171d;
-    --border: #2e303a;
-    --code-bg: #1f2028;
-    --accent: #c084fc;
-    --accent-bg: rgba(192, 132, 252, 0.15);
-    --accent-border: rgba(192, 132, 252, 0.5);
-    --social-bg: rgba(47, 48, 58, 0.5);
-    --shadow:
-      rgba(0, 0, 0, 0.4) 0 10px 15px -3px, rgba(0, 0, 0, 0.25) 0 4px 6px -2px;
-  }
-
-  #social .button-icon {
-    filter: invert(1) brightness(2);
-  }
+* {
+  box-sizing: border-box;
 }
 
 body {
   margin: 0;
+  color: var(--text);
+  /* Brushed-metal field: fine vertical grain + a broad diagonal sheen sitting
+     on a silver base. The whole site reads as one milled plate. */
+  background-color: var(--plate);
+  background-image:
+    repeating-linear-gradient(
+      90deg,
+      rgba(255, 255, 255, 0.035) 0px,
+      rgba(255, 255, 255, 0.035) 1px,
+      rgba(0, 0, 0, 0.025) 2px,
+      rgba(0, 0, 0, 0.025) 3px
+    ),
+    linear-gradient(
+      115deg,
+      var(--plate-hi) 0%,
+      var(--plate) 32%,
+      var(--plate-lo) 60%,
+      var(--plate) 82%,
+      var(--plate-hi) 100%
+    );
+  background-attachment: fixed;
 }
 
 #root {
   min-height: 100svh;
 }
 
+/* --- Headings: engraved condensed caps ------------------------------------ */
 h1,
-h2 {
-  font-family: var(--heading);
-  font-weight: 500;
-  color: var(--text-h);
+h2,
+h3 {
+  font-family: var(--display);
+  color: var(--ink);
+  text-transform: uppercase;
+  margin: 0;
 }
 
 h1 {
-  font-size: 56px;
-  letter-spacing: -1.68px;
-  margin: 32px 0;
-  @media (max-width: 1024px) {
-    font-size: 36px;
-    margin: 20px 0;
-  }
+  font-weight: 900;
+  font-size: clamp(38px, 5vw, 64px);
+  line-height: 0.95;
+  letter-spacing: 0.5px;
+  text-shadow: var(--engrave);
 }
+
 h2 {
-  font-size: 24px;
-  line-height: 118%;
-  letter-spacing: -0.24px;
-  margin: 0 0 8px;
-  @media (max-width: 1024px) {
-    font-size: 20px;
-  }
+  font-weight: 800;
+  font-size: 26px;
+  line-height: 1.05;
+  letter-spacing: 0.6px;
+  margin: 0 0 10px;
+  text-shadow: var(--emboss-light);
 }
+
 p {
   margin: 0;
 }
 
-code,
-.counter {
-  font-family: var(--mono);
-  display: inline-flex;
-  border-radius: 4px;
-  color: var(--text-h);
+a {
+  color: var(--felt);
+  text-decoration-color: var(--brass);
+  text-underline-offset: 3px;
+  transition: color 0.18s ease;
+}
+a:hover {
+  color: var(--brass);
 }
 
-code {
-  font-size: 15px;
-  line-height: 135%;
-  padding: 4px 8px;
-  background: var(--code-bg);
+/* A reusable diamond-bullet rule, echoing the
+   "DEVICES \25C6 POOL \25C6 JUKEBOXES" line on the business card. */
+.diamond-rule {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  font-family: var(--display);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1.2px;
+  font-size: 13px;
+  color: var(--ink-soft);
+}
+.diamond-rule li {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.diamond-rule li + li::before {
+  content: '\25C6';
+  color: var(--brass);
+  font-size: 9px;
+  transform: translateY(-1px);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation: none !important;
+    transition: none !important;
+  }
 }

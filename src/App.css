@@ -1,169 +1,333 @@
-:root {
-  --sidebar-width: 260px;
-  --header-height: 72px;
-  --sidebar-bg: #1b1d2a;
-  --sidebar-bg-hover: #2a2d3f;
-  --sidebar-active: #aa3bff;
-  --header-bg: #ffffff;
-  --header-border: #e5e4e7;
-  --content-bg: #f7f7fa;
-  --text: #2c2a35;
-  --text-muted: #6b6375;
-  --text-on-dark: #d8d6e0;
+/* ===========================================================================
+   Layout — Chrome Plate / Vintage Trade
+   Sidebar = a milled gunmetal control panel. Header = an engraved name plate.
+   Content = a brushed working surface. Everything reads as machined metal.
+   =========================================================================== */
+
+.layout {
+  min-height: 100svh;
 }
 
-/* Sidebar: spans the full vertical height, fixed on the left */
+/* --- Sidebar: a dark steel control panel --------------------------------- */
 .sidebar {
   position: fixed;
-  top: 0;
-  left: 0;
-  bottom: 0;
+  inset: 0 auto 0 0;
   width: var(--sidebar-width);
-  background: var(--sidebar-bg);
   display: flex;
   flex-direction: column;
   overflow-y: auto;
-  z-index: 2;
+  z-index: 3;
+  color: var(--text-on-dark);
+  background-color: var(--gunmetal);
+  background-image:
+    repeating-linear-gradient(
+      90deg,
+      rgba(255, 255, 255, 0.03) 0px,
+      rgba(255, 255, 255, 0.03) 1px,
+      rgba(0, 0, 0, 0.12) 2px,
+      rgba(0, 0, 0, 0.12) 3px
+    ),
+    linear-gradient(160deg, #25282e 0%, var(--gunmetal) 55%, #101216 100%);
+  border-right: 1px solid #000;
+  box-shadow:
+    inset -1px 0 0 rgba(255, 255, 255, 0.06),
+    4px 0 18px -8px rgba(0, 0, 0, 0.6);
 }
 
+/* --- Brand: a stamped badge with a slow chrome sheen --------------------- */
 .sidebar-brand {
+  position: relative;
   display: flex;
   align-items: center;
-  gap: 12px;
-  padding: 20px;
+  gap: 14px;
+  padding: 22px 20px;
   min-height: var(--header-height);
-  box-sizing: border-box;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.6);
+  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.05);
+  overflow: hidden;
+}
+
+/* the sheen that sweeps across the brand plate */
+.sidebar-brand::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    115deg,
+    transparent 40%,
+    rgba(255, 255, 255, 0.14) 50%,
+    transparent 60%
+  );
+  transform: translateX(-120%);
+  animation: sheen 7s ease-in-out infinite;
+  pointer-events: none;
+}
+
+@keyframes sheen {
+  0%,
+  72% {
+    transform: translateX(-120%);
+  }
+  100% {
+    transform: translateX(120%);
+  }
 }
 
 .brand-mark {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 40px;
-  height: 40px;
-  border-radius: 8px;
-  background: var(--sidebar-active);
-  color: #fff;
-  font-weight: 700;
-  font-size: 16px;
+  width: 52px;
+  height: 52px;
   flex-shrink: 0;
+  font-family: var(--display);
+  font-weight: 900;
+  font-size: 22px;
+  letter-spacing: 0.5px;
+  color: var(--ink);
+  background: linear-gradient(160deg, var(--brass-hi), var(--brass) 60%, #8a6420);
+  border-radius: 6px;
+  border: 1px solid rgba(0, 0, 0, 0.4);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.5),
+    inset 0 -2px 4px rgba(0, 0, 0, 0.3),
+    0 2px 4px rgba(0, 0, 0, 0.4);
+  text-shadow: 0 1px 0 rgba(255, 255, 255, 0.35);
 }
 
 .brand-text {
-  color: #fff;
-  font-size: 14px;
-  font-weight: 600;
-  line-height: 1.2;
+  font-family: var(--display);
+  font-weight: 800;
+  text-transform: uppercase;
+  font-size: 19px;
+  line-height: 1.02;
+  letter-spacing: 0.6px;
+  color: #f2f3f5;
+  text-shadow: 0 1px 1px rgba(0, 0, 0, 0.6);
 }
 
+/* --- Nav: engraved switches with a brass "lit" state --------------------- */
 .sidebar-nav {
   display: flex;
   flex-direction: column;
-  padding: 12px 0;
+  padding: 14px 0;
+  gap: 2px;
 }
 
 .nav-button {
+  position: relative;
   appearance: none;
   border: none;
   background: transparent;
   color: var(--text-on-dark);
-  font: inherit;
-  font-size: 15px;
+  font-family: var(--display);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  font-size: 16px;
   text-align: left;
-  padding: 14px 24px;
+  padding: 13px 22px 13px 28px;
   cursor: pointer;
   border-left: 3px solid transparent;
-  transition: background 0.15s ease, color 0.15s ease, border-color 0.15s ease;
+  transition: background 0.18s ease, color 0.18s ease, padding-left 0.18s ease;
 }
 
-/* Highlight on hover/scrollover */
+.nav-button::before {
+  content: '\25C6';
+  position: absolute;
+  left: 20px;
+  font-size: 8px;
+  color: var(--brass);
+  opacity: 0;
+  transform: translateX(-4px);
+  transition: opacity 0.18s ease, transform 0.18s ease;
+}
+
 .nav-button:hover {
-  background: var(--sidebar-bg-hover);
+  background: var(--gunmetal-hi);
   color: #fff;
+  padding-left: 32px;
+}
+.nav-button:hover::before {
+  opacity: 0.6;
+  transform: translateX(0);
 }
 
-/* Persistent highlight for the selected page */
 .nav-button.is-active {
-  background: var(--sidebar-bg-hover);
-  color: #fff;
-  border-left-color: var(--sidebar-active);
-  font-weight: 600;
+  color: var(--brass-hi);
+  background: linear-gradient(
+    90deg,
+    rgba(177, 129, 43, 0.22),
+    rgba(177, 129, 43, 0)
+  );
+  border-left-color: var(--brass);
+  text-shadow: 0 0 12px rgba(216, 175, 85, 0.45);
+}
+.nav-button.is-active::before {
+  opacity: 1;
+  transform: translateX(0);
+  color: var(--brass-hi);
 }
 
-/* Header: spans full width but is offset on the left by the sidebar */
+/* --- Header: an engraved name plate -------------------------------------- */
 .header {
   position: fixed;
   top: 0;
   left: var(--sidebar-width);
   right: 0;
-  height: var(--header-height);
-  background: var(--header-bg);
-  border-bottom: 1px solid var(--header-border);
+  min-height: var(--header-height);
   display: flex;
-  align-items: center;
-  padding: 0 32px;
-  box-sizing: border-box;
-  z-index: 1;
+  flex-direction: column;
+  justify-content: center;
+  gap: 10px;
+  padding: 18px 40px;
+  z-index: 2;
+  background-color: var(--plate);
+  background-image: linear-gradient(
+    180deg,
+    var(--plate-hi),
+    var(--plate) 55%,
+    var(--plate-lo)
+  );
+  border-bottom: 2px solid var(--border-dark);
+  box-shadow: 0 2px 10px -4px rgba(0, 0, 0, 0.4);
 }
 
 .header-title {
-  margin: 0;
-  font-size: 22px;
-  font-weight: 600;
-  color: var(--text);
+  /* h1 styling comes from index.css; animate it in on page change */
+  animation: stamp 0.32s cubic-bezier(0.2, 0.7, 0.3, 1);
 }
 
-/* Content: fills the remaining space to the right of the sidebar
-   and below the header */
+@keyframes stamp {
+  0% {
+    opacity: 0;
+    transform: translateY(6px) scale(0.99);
+    letter-spacing: 3px;
+  }
+  100% {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* --- Content: brushed working surface ------------------------------------ */
 .content {
   margin-left: var(--sidebar-width);
   margin-top: var(--header-height);
-  min-height: calc(100vh - var(--header-height));
-  background: var(--content-bg);
-  padding: 32px;
-  box-sizing: border-box;
+  min-height: calc(100svh - var(--header-height));
+  padding: 40px;
 }
 
 .content-inner {
-  width: 100%;
-  color: var(--text-muted);
+  max-width: 1080px;
+  color: var(--text);
   font-size: 17px;
-  line-height: 1.6;
+  line-height: 1.7;
+  animation: rise 0.34s ease both;
+}
+
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
 }
 
 .content-inner p {
-  margin: 0 0 16px;
+  margin: 0 0 18px;
+  max-width: 68ch;
 }
 
-/* Map fills the content width and as much height as is left below the
-   intro text, without cropping. */
+/* First paragraph of a page reads like a lead-in. */
+.content-inner > p:first-child {
+  font-size: 19px;
+  color: var(--ink-soft);
+}
+
+/* --- Home contact block: a stamped info plate ---------------------------- */
+.contact-card {
+  margin-top: 24px;
+  display: inline-block;
+  padding: 22px 28px;
+  background: linear-gradient(160deg, var(--panel), var(--plate));
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  box-shadow: var(--shadow-plate);
+}
+.contact-card .contact-name {
+  font-family: var(--display);
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  font-size: 22px;
+  color: var(--ink);
+  margin: 0 0 8px;
+  text-shadow: var(--emboss-light);
+}
+.contact-card .contact-line {
+  margin: 4px 0;
+  font-size: 16px;
+  color: var(--ink-soft);
+}
+.contact-card .contact-line a {
+  font-weight: 600;
+}
+
+/* --- Location map: a framed photo plate ---------------------------------- */
 .location-map {
   display: block;
   width: 100%;
   height: auto;
-  max-height: calc(100vh - var(--header-height) - 160px);
+  max-height: calc(100svh - var(--header-height) - 200px);
   object-fit: contain;
-  border-radius: 12px;
+  margin-top: 8px;
+  padding: 8px;
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  box-shadow: var(--shadow-plate);
 }
 
-.content-inner a {
-  color: var(--sidebar-active);
-}
-
-@media (max-width: 640px) {
+/* --- Responsive: collapse the panel to an icon rail ---------------------- */
+@media (max-width: 720px) {
   :root {
-    --sidebar-width: 64px;
+    --sidebar-width: 60px;
+    --header-height: 96px;
   }
   .brand-text {
     display: none;
   }
+  .brand-mark {
+    width: 40px;
+    height: 40px;
+    font-size: 16px;
+  }
+  .sidebar-brand {
+    padding: 16px 9px;
+    justify-content: center;
+  }
   .nav-button {
     font-size: 0;
-    padding: 14px 0;
+    padding: 16px 0;
     text-align: center;
+    border-left-width: 0;
+  }
+  .nav-button::before {
+    display: none;
   }
   .nav-button::first-letter {
-    font-size: 15px;
+    font-size: 17px;
+  }
+  .nav-button.is-active {
+    box-shadow: inset 3px 0 0 var(--brass);
+  }
+  .header,
+  .content {
+    padding-left: 20px;
+    padding-right: 20px;
   }
 }

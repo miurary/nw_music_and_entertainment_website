@@ -3,9 +3,7 @@ import jetPong from '../assets/games/jetpong.webp'
 import duckClaw from '../assets/games/duckclaw.webp'
 import pgaTour from '../assets/games/pgatour.webp'
 import bbhr from '../assets/games/bbhr.webp'
-import hpp from '../assets/games/hpp.webp'
 import jaws from '../assets/games/jawspin.webp'
-import elvira from '../assets/games/elvirapin.webp'
 import proam from '../assets/pool_tables/diamondproam.webp'
 import smart from '../assets/pool_tables/diamondsmart.webp'
 import professional from '../assets/pool_tables/diamondpro.webp'
@@ -49,16 +47,8 @@ export const ARCADE_GAMES: CardItem[] = [
     imageUrl: bbhr,
   },
   {
-    title: 'Harry Potter Pinball',
-    imageUrl: hpp,
-  },
-  {
-    title: 'Jaws Pinball',
+    title: 'Pinball',
     imageUrl: jaws,
-  },
-  {
-    title: 'Elvira Pinball',
-    imageUrl: elvira,
   },
 ]
 

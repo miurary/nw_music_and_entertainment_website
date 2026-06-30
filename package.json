@@ -8,7 +8,8 @@
     "build": "tsc -b && vite build",
     "lint": "eslint .",
     "preview": "vite preview",
-    "images": "node scripts/convert-images.mjs"
+    "images": "node scripts/convert-images.mjs",
+    "flatten-card": "node scripts/flatten-card.mjs"
   },
   "dependencies": {
     "react": "^19.2.6",

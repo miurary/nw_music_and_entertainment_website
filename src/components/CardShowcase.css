@@ -1,0 +1,162 @@
+/* Alternating "spec plate" showcase — an equipment-catalog layout that looks
+   intentional with only a few items. Framed photo on one side, engraved metal
+   plate on the other; sides alternate; collapses to a stack on mobile. */
+
+.spec-showcase {
+  list-style: none;
+  margin: 28px 0 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+}
+
+.spec-row {
+  display: flex;
+  align-items: stretch;
+  gap: 32px;
+  /* hidden until scrolled into view (see .is-visible) */
+  opacity: 0;
+  transform: translateY(22px);
+  transition: opacity 0.5s ease, transform 0.5s cubic-bezier(0.2, 0.7, 0.3, 1);
+}
+
+/* Every other row flips the photo to the right. */
+.spec-row:nth-child(even) {
+  flex-direction: row-reverse;
+}
+
+.spec-row.is-visible {
+  opacity: 1;
+  transform: none;
+}
+
+/* --- Framed photo --------------------------------------------------------- */
+.spec-photo {
+  flex: 1 1 0;
+  margin: 0;
+  padding: 8px;
+  min-width: 0;
+  background: linear-gradient(160deg, var(--panel), var(--plate) 70%, var(--plate-lo));
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  box-shadow: var(--shadow-plate);
+}
+
+.spec-photo-image {
+  display: block;
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+  border-radius: 7px;
+  border: 1px solid var(--border-dark);
+  background: #0c0d10;
+  transition: filter 0.25s ease;
+}
+
+.spec-row:hover .spec-photo-image {
+  filter: saturate(1.08) contrast(1.04);
+}
+
+.spec-photo-text {
+  display: flex;
+  align-items: center;
+  min-height: 100%;
+  padding: 22px;
+  color: var(--text-muted);
+  font-size: 15px;
+  line-height: 1.55;
+}
+
+/* --- Engraved spec plate -------------------------------------------------- */
+.spec-plate {
+  flex: 1 1 0;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 12px;
+  padding: 30px 34px;
+  background: linear-gradient(155deg, var(--plate-hi), var(--plate) 55%, var(--plate-lo));
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  box-shadow: var(--shadow-plate);
+}
+
+.spec-kicker {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  margin: 0;
+  font-family: var(--display);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1.6px;
+  font-size: 13px;
+  color: var(--ink-soft);
+}
+
+.spec-kicker-diamond {
+  color: var(--brass);
+  font-size: 9px;
+}
+
+.spec-title {
+  margin: 0;
+  font-size: clamp(24px, 2.4vw, 34px);
+  line-height: 1;
+  letter-spacing: 0.5px;
+  text-shadow: var(--engrave);
+}
+
+/* a short brass rule that "draws" in when the row reveals */
+.spec-rule {
+  display: block;
+  height: 3px;
+  width: 64px;
+  border-radius: 2px;
+  background: linear-gradient(90deg, var(--brass), var(--brass-hi));
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.5s ease 0.15s;
+}
+.spec-row.is-visible .spec-rule {
+  transform: scaleX(1);
+}
+
+/* --- Mobile: stack each row, photo above plate --------------------------- */
+@media (max-width: 720px) {
+  .spec-showcase {
+    gap: 22px;
+  }
+  .spec-row,
+  .spec-row:nth-child(even) {
+    flex-direction: column;
+    gap: 0;
+  }
+  /* Tie the photo and plate into one continuous unit when stacked. */
+  .spec-photo {
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+    border-bottom: none;
+    padding-bottom: 0;
+  }
+  .spec-plate {
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+    padding: 22px 24px;
+  }
+  .spec-photo-image {
+    aspect-ratio: 16 / 10;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .spec-row {
+    opacity: 1;
+    transform: none;
+  }
+  .spec-rule {
+    transform: scaleX(1);
+  }
+}

@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import './App.css'
-import CardGrid from './components/CardGrid'
+import CardShowcase from './components/CardShowcase'
 import ContactForm from './components/ContactForm'
 import { submitInquiry } from './utils/submitInquiry'
 import locationsMap from './assets/locations.webp'
@@ -56,8 +56,9 @@ const PAGES: Page[] = [
           Classic cabinets, modern hits, and redemption games. We can build a
           lineup tailored to your venue and rotate titles to keep things fresh.
         </p>
-        <CardGrid
+        <CardShowcase
           ariaLabel="Games on Site"
+          kicker="Arcade Game"
           items={ARCADE_GAMES}
         />
       </>
@@ -73,8 +74,9 @@ const PAGES: Page[] = [
           Digital jukeboxes with full catalogs and easy management.
           Perfect for bars, restaurants, and game rooms.
         </p>
-        <CardGrid
+        <CardShowcase
           ariaLabel="Jukeboxes"
+          kicker="Jukebox"
           items={JUKEBOXES}
         />
       </>
@@ -90,8 +92,9 @@ const PAGES: Page[] = [
           Tournament-grade and recreational pool tables, professionally leveled
           and maintained with regular recloth and repair service.
         </p>
-        <CardGrid
+        <CardShowcase
           ariaLabel="Pool Tables"
+          kicker="Pool Table"
           items={POOL_TABLES}
         />
       </>

@@ -181,6 +181,10 @@
   justify-content: center;
   gap: 10px;
   padding: 18px 40px;
+  /* Cover the iOS status-bar / Dynamic Island strip: the header sits at top:0,
+     so paint its background up through the safe-area inset and push the title
+     below it. env() is 0 on desktop, so this is mobile-only in effect. */
+  padding-top: calc(18px + env(safe-area-inset-top));
   z-index: 2;
   /* The deskewed card photo, anchored right so the arcade/jukebox machines
      read as banner art; a gunmetal scrim on the left keeps the title legible
@@ -236,8 +240,12 @@
   margin-left: var(--sidebar-width);
   /* Clear the fixed header with padding, not margin: a top margin here would
      collapse out to the top of the layout and add a phantom scroll region
-     equal to the header height. Border-box keeps min-height at one viewport. */
-  padding: calc(var(--header-height) + 40px) 40px 40px;
+     equal to the header height. Border-box keeps min-height at one viewport.
+     The safe-area insets keep page text clear of the status bar (top, which
+     also grew the header) and the home indicator (bottom); both are 0 on
+     desktop. */
+  padding: calc(var(--header-height) + 40px + env(safe-area-inset-top)) 40px
+    calc(40px + env(safe-area-inset-bottom));
   min-height: 100svh;
 }
 
@@ -331,6 +339,8 @@
   }
   .sidebar-brand {
     padding: 16px 9px;
+    /* Keep the brand badge below the status bar / Dynamic Island. */
+    padding-top: calc(16px + env(safe-area-inset-top));
     justify-content: center;
   }
   .nav-button {

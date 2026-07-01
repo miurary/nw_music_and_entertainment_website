@@ -54,13 +54,6 @@ export const ARCADE_GAMES: CardItem[] = [
     dimensions: 'L x W x H: 49" x 53" x 91"',
     weight: '370 Lbs',
   },
-  {
-    title: 'Pinball',
-    imageUrl: jaws,
-    details: 'Stern',
-    dimensions: 'L x W x H: 55" x 27" x 75.5"',
-    weight: 'Weight: 250 Lbs',
-  },
 ]
 
 export const PINBALL: CardItem[] = [

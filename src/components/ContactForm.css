@@ -24,6 +24,9 @@
 
 .contact-form-row .contact-field {
   flex: 1;
+  /* Flex items default to min-width:auto, so paired inputs won't shrink below
+     their intrinsic width and the row overflows narrow screens. Allow shrink. */
+  min-width: 0;
 }
 
 .contact-field {
@@ -46,6 +49,9 @@
   font-family: var(--body);
   font-size: 15px;
   color: var(--ink);
+  /* Fill the field rather than relying on the input's intrinsic size, which
+     otherwise pushes the layout wider than its container. */
+  width: 100%;
   background: #eceef0;
   border: 1px solid var(--border);
   border-radius: 7px;
@@ -154,4 +160,12 @@
 .contact-success p {
   margin: 0;
   color: var(--ink-soft);
+}
+
+/* On phones, stack the side-by-side pairs (name, email/phone) so each field
+   gets the full width instead of being squeezed. */
+@media (max-width: 720px) {
+  .contact-form-row {
+    flex-direction: column;
+  }
 }

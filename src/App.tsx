@@ -156,6 +156,9 @@ const PAGES: Page[] = [
 
 function App() {
   const [activeId, setActiveId] = useState(PAGES[0].id)
+  // Mobile only: the sidebar collapses to an off-canvas drawer toggled by the
+  // hamburger button. Ignored on desktop, where the sidebar is always visible.
+  const [menuOpen, setMenuOpen] = useState(false)
   const activePage = PAGES.find((p) => p.id === activeId) ?? PAGES[0]
 
   // Switching tabs swaps the body within one scrolling document, so reset the
@@ -164,9 +167,48 @@ function App() {
     window.scrollTo(0, 0)
   }, [activeId])
 
+  // While the drawer is open, lock page scroll and let Escape close it.
+  useEffect(() => {
+    if (!menuOpen) return
+    document.body.style.overflow = 'hidden'
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') setMenuOpen(false)
+    }
+    window.addEventListener('keydown', onKey)
+    return () => {
+      document.body.style.overflow = ''
+      window.removeEventListener('keydown', onKey)
+    }
+  }, [menuOpen])
+
+  const selectPage = (id: string) => {
+    setActiveId(id)
+    setMenuOpen(false)
+  }
+
   return (
     <div className="layout">
-      <aside className="sidebar">
+      <button
+        type="button"
+        className="nav-toggle"
+        aria-label={menuOpen ? 'Close navigation menu' : 'Open navigation menu'}
+        aria-expanded={menuOpen}
+        aria-controls="sidebar-nav"
+        onClick={() => setMenuOpen((open) => !open)}
+      >
+        <span className="nav-toggle-bars" aria-hidden="true" />
+      </button>
+
+      <div
+        className={'nav-overlay' + (menuOpen ? ' is-visible' : '')}
+        onClick={() => setMenuOpen(false)}
+        aria-hidden="true"
+      />
+
+      <aside
+        id="sidebar-nav"
+        className={'sidebar' + (menuOpen ? ' is-open' : '')}
+      >
         <div className="sidebar-brand">
           <span className="brand-mark">NW</span>
           <span className="brand-text">
@@ -181,7 +223,7 @@ function App() {
               className={
                 'nav-button' + (page.id === activeId ? ' is-active' : '')
               }
-              onClick={() => setActiveId(page.id)}
+              onClick={() => selectPage(page.id)}
             >
               {page.label}
             </button>

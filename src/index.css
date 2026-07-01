@@ -44,7 +44,11 @@
   --body: 'Bitter', Georgia, 'Times New Roman', serif;
 
   --sidebar-width: 268px;
-  --header-height: 116px;
+  /* Show the top ~25% of the 1.75:1 card banner as a full-width strip. At a
+     height of (content width / 7), background-size:cover width-fits the card so
+     top-anchoring crops off its redundant bottom (contact block). Capped at
+     25vh so it never dominates the page on tall or ultrawide viewports. */
+  --header-height: min(calc((100vw - var(--sidebar-width)) / 7), 25vh);
 
   font: 17px/1.6 var(--body);
   color: var(--text);

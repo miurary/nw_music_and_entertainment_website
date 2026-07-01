@@ -5,7 +5,7 @@ import ContactForm from './components/ContactForm'
 import { submitInquiry } from './utils/submitInquiry'
 import locationsMap from './assets/locations.webp'
 import type { Page } from './utils/types'
-import { ARCADE_GAMES, POOL_TABLES, JUKEBOXES } from './utils/types'
+import { ARCADE_GAMES, POOL_TABLES, JUKEBOXES, PINBALL } from './utils/types'
 
 const PAGES: Page[] = [
   {
@@ -47,19 +47,37 @@ const PAGES: Page[] = [
     ),
   },
   {
-    id: 'arcade',
-    label: 'Arcade Games',
-    title: 'Arcade Games',
+      id: 'arcade',
+      label: 'Arcade Games',
+      title: 'Arcade Games',
+      body: (
+        <>
+          <p>
+            Classic cabinets, modern hits, and redemption games. We can build a
+            lineup tailored to your venue and rotate titles to keep things fresh.
+          </p>
+          <CardShowcase
+            ariaLabel="Games on Site"
+            kicker="Arcade Game"
+            items={ARCADE_GAMES}
+          />
+        </>
+      ),
+  },
+  {
+    id: 'pinball',
+    label: 'Pinball',
+    title: 'Pinball',
     body: (
       <>
         <p>
-          Classic cabinets, modern hits, and redemption games. We can build a
-          lineup tailored to your venue and rotate titles to keep things fresh.
+          A classic addition to any business. 
+          A wide variety of pinball machines are available, including Stern, Jersey Jack, and more.
         </p>
         <CardShowcase
-          ariaLabel="Games on Site"
-          kicker="Arcade Game"
-          items={ARCADE_GAMES}
+          ariaLabel="Pinball Machines"
+          kicker="Pinball Machine"
+          items={PINBALL}
         />
       </>
     ),
@@ -90,8 +108,9 @@ const PAGES: Page[] = [
       <>
         <p>
           Tournament-grade and recreational pool tables, professionally leveled
-          and maintained with regular recloth and repair service. All available in 
-          7', 8', and 9' sizes. Minimum room sizes from 14.5' x 18' to 15.5' x 19'.
+          and maintained with regular recloth and repair service. Available sizes are 
+          7' with a 40" x 80" play area and 8' with a 45" x 90" play area. 
+          Minimum room sizes from 14.5' x 18' to 15' x 18.5'.
         </p>
         <CardShowcase
           ariaLabel="Pool Tables"
@@ -175,11 +194,10 @@ function App() {
           {activePage.title}
         </h1>
         <ul className="diamond-rule" aria-hidden="true">
-          <li>Amusement Devices</li>
-          <li>Pool Tables</li>
+          <li>Arcade Games</li>
+          <li>Pinball</li>
           <li>Jukeboxes</li>
-          <li>Videos</li>
-          <li>ATM&apos;s</li>
+          <li>Pool Tables</li>
         </ul>
       </header>
 

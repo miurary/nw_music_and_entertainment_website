@@ -1,12 +1,11 @@
 import { type ReactNode } from 'react'
 import jetPong from '../assets/games/jetpong.webp'
-import duckClaw from '../assets/games/duckclaw.webp'
 import pgaTour from '../assets/games/pgatour.webp'
 import bbhr from '../assets/games/bbhr.webp'
-import jaws from '../assets/games/jawspin.webp'
-import proam from '../assets/pool_tables/diamondproam.webp'
+import jaws from '../assets/pinball/jaws2.webp'
+import deadpool from '../assets/pinball/deadpool.webp'
+import kingkong from '../assets/pinball/kingkong.webp'
 import smart from '../assets/pool_tables/diamondsmart.webp'
-import professional from '../assets/pool_tables/diamondpro.webp'
 import angelina from '../assets/jukeboxes/angelina.webp'
 import virtuo from '../assets/jukeboxes/virtuo.webp'
 
@@ -42,13 +41,6 @@ export const ARCADE_GAMES: CardItem[] = [
     weight: 'Weight: 500 Lbs',
   },
   {
-    title: 'Lucky Duck Claw Machine',
-    imageUrl: duckClaw,
-    details: 'Lucky Duck is a high-earning crane with a small footprint and programmable pricing.  Store up to 1,000 rubber ducks.',
-    dimensions: 'L x W x H: 27.56" x 24.4" x 74.8"',
-    weight: '245 Lbs',
-  },
-  {
     title: 'Golden Tee PGA Tour',
     imageUrl: pgaTour,
     details: 'Perfect for any game room or business, the Golden Tee PGA TOUR Clubhouse Deluxe Edition is the arcade experience that will have your neighbors and coworkers drooling. For those looking to make a statement while bringing gaming joy to their lives, look no further.',
@@ -65,34 +57,43 @@ export const ARCADE_GAMES: CardItem[] = [
   {
     title: 'Pinball',
     imageUrl: jaws,
-    details: 'A classic addition to any business. A wide variety of pinball machines are available, including Stern, Jersey Jack, and more.',
+    details: 'Stern',
     dimensions: 'L x W x H: 55" x 27" x 75.5"',
     weight: 'Weight: 250 Lbs',
   },
 ]
 
+export const PINBALL: CardItem[] = [
+  {
+    title: 'Jaws',
+    imageUrl: jaws,
+    details: 'Stern',
+    dimensions: 'L x W x H: 55" x 27" x 75.5"',
+    weight: 'Weight: 250 Lbs',
+  },
+  {
+    title: 'Deadpool',
+    imageUrl: deadpool,
+    details: 'Stern',
+    dimensions: 'L x W x H: 55" x 27" x 75.5"',
+    weight: 'Weight: 250 Lbs',
+  },
+  {
+    title: 'King Kong',
+    imageUrl: kingkong,
+    details: 'Stern',
+    dimensions: 'L x W x H: 55" x 27" x 75.5"',
+    weight: 'Weight: 250 Lbs',
+  },
+]
 
 export const POOL_TABLES: CardItem[] = [
-  {
-    title: 'Diamond Pro-Am',
-    imageUrl: proam,
-    details: 'Popular choice for tournaments and residential game rooms. Features solid wood exterior aprons and rails, but omits the cast-iron subframe of the Professional for a more traditional build.',
-    dimensions: 'L x W x H: 94" x 54" x 32" to 114" x 64" x 32"',
-    weight: 'Weight: 800-1200 Lbs',
-  },
   {
     title: 'Diamond Smart',
     imageUrl: smart,
     details: 'The coin-op version of the Pro-Am. The exact same table ready for your business use.',
-    dimensions: 'L x W x H: 94" x 54" x 32" to 114" x 64" x 32"',
-    weight: 'Weight: 800-1200 Lbs',
-  },
-  {
-    title: 'Diamond Professional',
-    imageUrl: professional,
-    details: 'Premier model used in major tournaments. Features a heavy-duty internal steel frame, an exclusive leveling system, tighter pocket openings, and deeper shelves.',
-    dimensions: 'L x W x H: 94" x 54" x 32" to 114" x 64" x 32"',
-    weight: 'Weight: 800-1200 Lbs',
+    dimensions: 'L x W x H: 94" x 54" x 32" to 104" x 59" x 32"',
+    weight: 'Weight: 800-1000 Lbs',
   },
 ]
 

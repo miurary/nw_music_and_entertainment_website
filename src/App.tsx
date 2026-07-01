@@ -4,8 +4,19 @@ import CardShowcase from './components/CardShowcase'
 import ContactForm from './components/ContactForm'
 import { submitInquiry } from './utils/submitInquiry'
 import locationsMap from './assets/locations.webp'
+import jawsBanner from './assets/pinball/jaws2.webp'
+import poolBanner from './assets/pool_tables/diamondsmart.webp'
+import jukeboxBanner from './assets/jukeboxes/virtuo.webp'
 import type { Page } from './utils/types'
 import { ARCADE_GAMES, POOL_TABLES, JUKEBOXES, PINBALL } from './utils/types'
+
+// Decorative triptych shown in the header banner: one machine from each of the
+// headline categories. Purely visual, so it's marked aria-hidden in the markup.
+const BANNER_IMAGES = [
+  { src: jawsBanner, label: 'JAWS pinball machine' },
+  { src: poolBanner, label: 'Diamond pool table' },
+  { src: jukeboxBanner, label: 'TouchTunes jukebox' },
+]
 
 const PAGES: Page[] = [
   {
@@ -232,18 +243,30 @@ function App() {
       </aside>
 
       <header className="header">
-        <h1 className="header-title" key={activePage.id}>
-          {activePage.title}
-        </h1>
-        <ul className="diamond-rule" aria-hidden="true">
-          <li>Arcade Games</li>
-          <li>Pinball</li>
-          <li>Jukeboxes</li>
-          <li>Pool Tables</li>
-        </ul>
+        <div className="header-copy">
+          <h1 className="header-title" key={activePage.id}>
+            NW Entertainment &amp; Music
+          </h1>
+          <ul className="diamond-rule" aria-hidden="true">
+            <li>Arcade Games</li>
+            <li>Pinball</li>
+            <li>Jukeboxes</li>
+            <li>Pool Tables</li>
+          </ul>
+        </div>
+        <div className="header-banner" aria-hidden="true">
+          {BANNER_IMAGES.map((img) => (
+            <figure className="banner-panel" key={img.src}>
+              <img src={img.src} alt={img.label} loading="eager" />
+            </figure>
+          ))}
+        </div>
       </header>
 
       <main className="content">
+        <h2 className="header-subtitle" key={activePage.id}>
+            {activePage.title}
+        </h2>
         <div className="content-inner">{activePage.body}</div>
       </main>
     </div>

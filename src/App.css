@@ -179,7 +179,7 @@
   color: var(--brass-hi);
 }
 
-/* --- Header: the business card itself, flattened into a banner ----------- */
+/* --- Header: the three machines as a full-bleed banner behind the title --- */
 .header {
   position: fixed;
   top: 0;
@@ -187,46 +187,77 @@
   right: 0;
   min-height: var(--header-height);
   display: flex;
-  flex-direction: column;
-  justify-content: center;
-  gap: 10px;
-  padding: 18px 40px;
+  align-items: center;
+  justify-content: flex-start;
+  padding: 14px 40px;
   /* Cover the iOS status-bar / Dynamic Island strip: the header sits at top:0,
      so paint its background up through the safe-area inset and push the title
      below it. env() is 0 on desktop, so this is mobile-only in effect. */
-  padding-top: calc(18px + env(safe-area-inset-top));
+  padding-top: calc(14px + env(safe-area-inset-top));
   z-index: 2;
-  /* The deskewed card photo, anchored right so the arcade/jukebox machines
-     read as banner art; a gunmetal scrim on the left keeps the title legible
-     and ties the banner to the rest of the steel theme. */
+  overflow: hidden;
+  /* Gunmetal fallback (matches the sidebar) shows before/behind the images. */
   background-color: var(--gunmetal);
-  background-image:
-    linear-gradient(
-      90deg,
-      rgba(26, 28, 32, 0.96) 0%,
-      rgba(26, 28, 32, 0.85) 30%,
-      rgba(26, 28, 32, 0.4) 54%,
-      rgba(26, 28, 32, 0) 80%
-    ),
-    url('./assets/card-banner.webp');
-  background-repeat: no-repeat, no-repeat;
-  /* Full-width banner cropped to its top quarter: at the header height set in
-     index.css, cover width-fits the card so top-anchoring shows only its top
-     25%. The gunmetal scrim (matching the sidebar) fades left→right so the
-     title stays legible over the banner. */
-  background-size: cover, cover;
-  background-position: center, center top;
   border-bottom: 2px solid #000;
   box-shadow:
     inset 0 -1px 0 rgba(255, 255, 255, 0.06),
     0 4px 14px -4px rgba(0, 0, 0, 0.55);
 }
 
+/* The three machine photos tile edge-to-edge to fill the whole banner, sitting
+   behind the title. A scrim (::after) darkens them so the text stays legible. */
+.header-banner {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  display: flex;
+  margin: 0;
+}
+.header-banner::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  /* Heaviest on the left where the title sits, easing right so the machines
+     read through. */
+  background: linear-gradient(
+    90deg,
+    rgba(20, 22, 26, 0.92) 0%,
+    rgba(20, 22, 26, 0.72) 38%,
+    rgba(20, 22, 26, 0.48) 100%
+  );
+}
+
+.banner-panel {
+  flex: 1 1 0;
+  min-width: 0;
+  margin: 0;
+  overflow: hidden;
+}
+
+.banner-panel img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+/* Title + diamond rule ride above the banner. */
+.header-copy {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
 .header-title {
   /* h1 base comes from index.css; recolor for the dark banner + animate in */
   color: #f4f5f7;
   text-shadow: 0 2px 6px rgba(0, 0, 0, 0.7), 0 0 1px rgba(0, 0, 0, 0.9);
-  animation: stamp 0.32s cubic-bezier(0.2, 0.7, 0.3, 1);
+}
+
+.header-subtitle {
+  color: #000000;
 }
 
 .header .diamond-rule {
@@ -343,9 +374,25 @@
     /* The drawer floats over the content instead of reserving a column, so the
        header and content span the full width (sidebar offset = 0). */
     --sidebar-width: 0px;
-    /* Narrow phones make a true top-25% strip too thin, so use a fixed height
-       that still shows the top of the card (center top anchoring). */
-    --header-height: 130px;
+    --header-height: 150px;
+  }
+
+  /* Lay the four categories out as an aligned 2x2 grid instead of letting them
+     wrap unevenly. Each cell gets a leading diamond so the columns line up. */
+  .header .diamond-rule {
+    display: grid;
+    grid-template-columns: repeat(2, auto);
+    justify-content: start;
+    gap: 6px 20px;
+  }
+  .header .diamond-rule li {
+    gap: 8px;
+  }
+  .header .diamond-rule li::before {
+    content: '\25C6';
+    color: var(--brass-hi);
+    font-size: 9px;
+    transform: translateY(-1px);
   }
 
   /* Off-canvas: hidden to the left until the hamburger slides it in. Full
@@ -372,6 +419,11 @@
     padding-left: 64px;
     padding-right: 20px;
   }
+
+  .header-title {
+    font-size: 24px;
+  }
+
   .content {
     padding-left: 20px;
     padding-right: 20px;

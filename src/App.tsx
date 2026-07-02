@@ -27,8 +27,14 @@ const PAGES: Page[] = [
       <>
         <p>
           Welcome to NW Entertainment &amp; Music. We bring arcade games,
-          jukeboxes, pool tables, and full-service amusement equipment to
+          jukeboxes, pool tables, ATMs, and full-service amusement equipment to
           businesses across the region.
+        </p>
+        <p>
+          Our mission is to maximize earning potential by forming a partnership
+          with our locations to create joint financial success. We aim to create
+          value for our accounts and players by providing the best equipment and
+          delivering unmatched service to keep our equipment earning.
         </p>
         <div className="contact-card">
           <p className="contact-name">Blake Miura</p>
@@ -55,6 +61,14 @@ const PAGES: Page[] = [
         Responsive to your needs. Give us a call if things break. 
         A partner you can trust to keep your entertainment equipment running smoothly.
       </p>
+    ),
+  },
+  {
+    id: 'testimonials',
+    label: 'Testimonials',
+    title: 'Testimonials',
+    body: (
+      <></>
     ),
   },
   {
@@ -252,6 +266,7 @@ function App() {
             <li>Pinball</li>
             <li>Jukeboxes</li>
             <li>Pool Tables</li>
+            <li>ATMs</li>
           </ul>
         </div>
         <div className="header-banner" aria-hidden="true">

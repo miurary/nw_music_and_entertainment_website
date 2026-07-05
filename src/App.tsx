@@ -71,7 +71,9 @@ const PAGES: Page[] = [
     label: 'Testimonials',
     title: 'Testimonials',
     body: (
-      <></>
+      <p>
+        Coming soon.
+      </p>
     ),
   },
   {
@@ -282,12 +284,12 @@ function App() {
       </header>
 
       <main className="content">
-        <h2 className="header-subtitle" key={activePage.id}>
+        <h2 className="header-subtitle" key={activePage.id + '-title'}>
             {activePage.title}
         </h2>
         <div className="content-inner">{activePage.body}</div>
         {activePage.subtitle && (
-          <h2 className="header-subtitle" key={activePage.id}>
+          <h2 className="header-subtitle" key={activePage.id + '-subtitle'}>
             {activePage.subtitle}
           </h2>
         )}

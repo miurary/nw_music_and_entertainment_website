@@ -30,12 +30,6 @@ const PAGES: Page[] = [
           jukeboxes, pool tables, ATMs, and full-service amusement equipment to
           businesses across the region.
         </p>
-        <p>
-          Our mission is to maximize earning potential by forming a partnership
-          with our locations to create joint financial success. We aim to create
-          value for our accounts and players by providing the best equipment and
-          delivering unmatched service to keep our equipment earning.
-        </p>
         <div className="contact-card">
           <p className="contact-name">Blake Miura</p>
           <p className="contact-line">
@@ -58,8 +52,17 @@ const PAGES: Page[] = [
       <p>
         30 years of experience in the amusement and entertainment industry. 
         Our team handles everything from planning to installation and maintenance.
-        Responsive to your needs. Give us a call if things break. 
+        Responsive to your needs.
         A partner you can trust to keep your entertainment equipment running smoothly.
+      </p>
+    ),
+    subtitle: 'Mission',
+    body2: (
+      <p>
+          Our mission is to maximize earning potential by forming a partnership
+          with our locations to create joint financial success. We aim to create
+          value for our accounts and players by providing the best equipment and
+          delivering unmatched service to keep our equipment earning.
       </p>
     ),
   },
@@ -283,6 +286,14 @@ function App() {
             {activePage.title}
         </h2>
         <div className="content-inner">{activePage.body}</div>
+        {activePage.subtitle && (
+          <h2 className="header-subtitle" key={activePage.id}>
+            {activePage.subtitle}
+          </h2>
+        )}
+        {activePage.body2 && (
+          <div className="content-inner">{activePage.body2}</div>
+        )}
       </main>
     </div>
   )

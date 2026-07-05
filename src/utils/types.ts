@@ -14,6 +14,8 @@ export type Page = {
   label: string
   title: string
   body: ReactNode
+  subtitle?: string
+  body2?: ReactNode
 }
 
 export type CardItem = {

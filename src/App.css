@@ -368,6 +368,28 @@
   box-shadow: var(--shadow-plate);
 }
 
+.opt-lever {
+  display: inline-flex; align-items: center; gap: 9px;
+  text-decoration: none;
+  border: 1px solid rgba(0,0,0,0.35);
+  border-radius: 7px;
+  background: linear-gradient(160deg, var(--brass-hi), var(--brass) 60%, #8a6420);
+  color: #1d1503;
+  font-family: var(--display);
+  font-size: 16px; font-weight: 800;
+  text-transform: uppercase; letter-spacing: 1.2px;
+  padding: 11px 26px;
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.5),
+    inset 0 -2px 4px rgba(0,0,0,0.25),
+    0 3px 6px -2px rgba(0,0,0,0.4);
+  text-shadow: 0 1px 0 rgba(255,255,255,0.3);
+  transition: transform 0.06s ease, filter 0.18s ease;
+}
+.opt-lever:hover { filter: brightness(1.06); }
+.opt-lever:active { transform: translateY(2px); }
+.opt-lever .ext { font-size: 0.85em; }
+
 /* --- Responsive: sidebar becomes an off-canvas drawer -------------------- */
 @media (max-width: 720px) {
   :root {

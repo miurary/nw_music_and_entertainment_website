@@ -131,6 +131,23 @@ const PAGES: Page[] = [
     ),
   },
   {
+    id: 'team-rewards',
+    label: 'Team Rewards',
+    title: 'TouchTunes Team Rewards',
+    body: (
+      <>
+        <p>
+          TouchTunes offers Team Rewards as a loyalty program for businesses.
+          Staff members are able to earn free credits weekly for playing music on the jukebox.
+          Sign up through TouchTunes to get started and start earning rewards for your team.
+        </p>
+        <a className="opt-lever" href="https://www.touchtunes.com/rewards/team-rewards" target="_blank" rel="noopener noreferrer">
+          TouchTunes Team Rewards
+        </a>
+      </>
+    )
+  },
+  {
     id: 'pool',
     label: 'Pool Tables',
     title: 'Pool Tables',

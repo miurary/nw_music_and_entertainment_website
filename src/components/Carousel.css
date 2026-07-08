@@ -1,0 +1,189 @@
+/* Carousel — two looks sharing the site's brushed-metal frame:
+   a large "hero" slideshow and a scrolling "filmstrip" reel. */
+
+.carousel-hero,
+.carousel-filmstrip {
+  margin-top: 24px;
+}
+
+/* --- Shared framed photo (blurred fill + contained image) ----------------- */
+.carousel-blur {
+  position: absolute;
+  inset: 0;
+  background-size: cover;
+  background-position: center;
+  filter: blur(22px) brightness(0.5);
+  transform: scale(1.15);
+}
+
+.carousel-image {
+  position: relative;
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+/* =========================================================================
+   Hero slideshow
+   ========================================================================= */
+.carousel-hero .carousel-stage {
+  position: relative;
+  aspect-ratio: 16 / 10;
+  overflow: hidden;
+  background: var(--gunmetal);
+  border: 1px solid var(--border);
+  border-radius: 9px;
+  box-shadow:
+    inset 0 2px 6px rgba(0, 0, 0, 0.4),
+    var(--shadow-plate);
+}
+
+.carousel-slide {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  transition: opacity 0.6s ease;
+  pointer-events: none;
+}
+
+.carousel-slide.is-active {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.carousel-caption {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 2;
+  font-family: var(--display);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  font-weight: 700;
+  font-size: 15px;
+  color: #f2ede1;
+  padding: 26px 18px 14px;
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.72), transparent);
+}
+
+.carousel-caption-diamond {
+  color: var(--brass-hi);
+  margin-right: 8px;
+  font-size: 11px;
+}
+
+.carousel-arrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 3;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  cursor: pointer;
+  border: 1px solid rgba(0, 0, 0, 0.4);
+  color: #1d1503;
+  background: linear-gradient(160deg, var(--brass-hi), var(--brass) 60%, #8a6420);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.5),
+    0 3px 6px -2px rgba(0, 0, 0, 0.5);
+  font-size: 22px;
+  font-family: var(--display);
+  line-height: 1;
+  display: grid;
+  place-items: center;
+  transition: filter 0.18s ease;
+}
+
+.carousel-arrow:hover {
+  filter: brightness(1.08);
+}
+
+.carousel-prev {
+  left: 12px;
+}
+
+.carousel-next {
+  right: 12px;
+}
+
+.carousel-dots {
+  display: flex;
+  gap: 9px;
+  justify-content: center;
+  margin-top: 16px;
+}
+
+.carousel-dot {
+  width: 11px;
+  height: 11px;
+  border-radius: 50%;
+  cursor: pointer;
+  padding: 0;
+  border: 1px solid rgba(0, 0, 0, 0.35);
+  background: var(--plate-lo);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.4);
+  transition: background 0.18s ease;
+}
+
+.carousel-dot.is-active {
+  background: var(--brass);
+}
+
+/* =========================================================================
+   Filmstrip reel
+   ========================================================================= */
+.carousel-reel-mask {
+  overflow: hidden;
+  padding: 6px 0;
+}
+
+.carousel-reel {
+  display: flex;
+  gap: 16px;
+  width: max-content;
+  animation: carousel-scroll 38s linear infinite;
+}
+
+/* Pause the reel when the visitor hovers so they can read a machine. */
+.carousel-reel-mask:hover .carousel-reel {
+  animation-play-state: paused;
+}
+
+@keyframes carousel-scroll {
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+.carousel-cell {
+  flex: 0 0 auto;
+  width: 240px;
+  margin: 0;
+}
+
+.carousel-cell-frame {
+  position: relative;
+  aspect-ratio: 4 / 3;
+  overflow: hidden;
+  background: var(--gunmetal);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.35);
+}
+
+.carousel-cell-label {
+  font-family: var(--display);
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  font-weight: 700;
+  font-size: 13px;
+  color: var(--ink-soft);
+  text-align: center;
+  margin-top: 8px;
+}
+
+/* The global reduced-motion rule in index.css already disables the scroll
+   animation; the reel then sits static and the mask simply clips the overflow. */

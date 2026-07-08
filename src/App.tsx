@@ -9,6 +9,7 @@ import poolBanner from './assets/pool_tables/diamondsmart.webp'
 import jukeboxBanner from './assets/jukeboxes/virtuo.webp'
 import type { Page } from './utils/types'
 import { ARCADE_GAMES, POOL_TABLES, JUKEBOXES, PINBALL } from './utils/types'
+import Carousel from './components/Carousel'
 
 // Decorative triptych shown in the header banner: one machine from each of the
 // headline categories. Purely visual, so it's marked aria-hidden in the markup.
@@ -30,6 +31,18 @@ const PAGES: Page[] = [
           jukeboxes, pool tables, ATMs, and full-service amusement equipment to
           businesses across the region.
         </p>
+        <Carousel
+          items = {[...ARCADE_GAMES, ...POOL_TABLES, ...JUKEBOXES, ...PINBALL]}
+          variant = "hero"
+          ariaLabel = "NW Entertainment & Music Equipment Showcase"
+          interval = {3500}
+        />
+        <Carousel
+          items = {[...ARCADE_GAMES, ...POOL_TABLES, ...JUKEBOXES, ...PINBALL]}
+          variant = "filmstrip"
+          ariaLabel = "NW Entertainment & Music Equipment Showcase"
+          interval = {3500}
+        />
         <div className="contact-card">
           <p className="contact-name">Blake Miura</p>
           <p className="contact-line">

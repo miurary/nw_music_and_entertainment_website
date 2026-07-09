@@ -136,26 +136,33 @@
    Filmstrip reel
    ========================================================================= */
 .carousel-reel-mask {
-  overflow: hidden;
+  overflow-x: auto;
+  overflow-y: hidden;
   padding: 6px 0;
+  /* Let horizontal drags/swipes pan the reel while vertical gestures still
+     scroll the page. Mouse drag is wired up in JS. */
+  touch-action: pan-x;
+  cursor: grab;
+  scrollbar-width: none; /* Firefox — hide the scrollbar; drag/wheel still work */
+}
+.carousel-reel-mask::-webkit-scrollbar {
+  display: none; /* WebKit/Blink */
+}
+.carousel-reel-mask.is-dragging {
+  cursor: grabbing;
 }
 
 .carousel-reel {
   display: flex;
   gap: 16px;
   width: max-content;
-  animation: carousel-scroll 38s linear infinite;
+  /* Photos shouldn't hijack the drag as native image-drags or get selected. */
+  user-select: none;
 }
 
-/* Pause the reel when the visitor hovers so they can read a machine. */
-.carousel-reel-mask:hover .carousel-reel {
-  animation-play-state: paused;
-}
-
-@keyframes carousel-scroll {
-  to {
-    transform: translateX(-50%);
-  }
+.carousel-reel .carousel-image {
+  -webkit-user-drag: none;
+  pointer-events: none;
 }
 
 .carousel-cell {
@@ -185,5 +192,5 @@
   margin-top: 8px;
 }
 
-/* The global reduced-motion rule in index.css already disables the scroll
-   animation; the reel then sits static and the mask simply clips the overflow. */
+/* Reduced motion is honored in JS (auto-scroll is skipped); the reel stays
+   fully draggable so the visitor can still browse the strip at their own pace. */

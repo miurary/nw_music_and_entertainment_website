@@ -46,7 +46,7 @@ function Carousel({
 }: CarouselProps): ReactNode {
   if (items.length === 0) return null
   return variant === 'filmstrip' ? (
-    <Filmstrip items={items} ariaLabel={ariaLabel} />
+    <Filmstrip items={items} ariaLabel={ariaLabel} interval={interval} />
   ) : (
     <Hero items={items} ariaLabel={ariaLabel} interval={interval} />
   )
@@ -161,17 +161,161 @@ function Hero({
   )
 }
 
+/** Copies of the item list rendered side by side so the scroll can wrap
+    seamlessly in either direction. Three is the minimum that keeps content on
+    both sides of the middle copy at every wrap point. */
+const REEL_COPIES = 3
+
+/** After the visitor stops touching the reel, wait this long before the
+    auto-scroll takes over again so it doesn't fight trackpad/wheel momentum. */
+const RESUME_DELAY_MS = 1200
+
 function Filmstrip({
   items,
   ariaLabel,
+  interval,
 }: {
   items: CardItem[]
   ariaLabel: string
+  interval: number
 }): ReactNode {
-  const maskRef = useRef<HTMLDivElement>(null)
+  const scrollRef = useRef<HTMLDivElement>(null)
+  const reelRef = useRef<HTMLDivElement>(null)
 
-  // The reel is the item list rendered twice so the CSS translateX(-50%) loop
-  // is seamless. The duplicate copy is decorative, so it's aria-hidden.
+  useEffect(() => {
+    const scroller = scrollRef.current
+    const reel = reelRef.current
+    if (!scroller || !reel) return
+
+    // Width of a single copy of the list; the wrap keeps scrollLeft inside the
+    // middle copy's band [oneSet, 2*oneSet) so there's always a copy to either
+    // side. Re-measured on resize since cell widths can change.
+    let oneSet = reel.scrollWidth / REEL_COPIES
+    const measure = () => {
+      oneSet = reel.scrollWidth / REEL_COPIES
+    }
+
+    // Start in the middle copy so the very first drag/scroll left has content.
+    scroller.scrollLeft = oneSet
+
+    // Drag state is declared before wrap() so wrap can keep the drag anchor in
+    // sync when it shifts scrollLeft mid-drag (see below).
+    let dragging = false
+    let startX = 0
+    let startLeft = 0
+
+    const wrap = () => {
+      if (oneSet <= 0) return
+      let shift = 0
+      if (scroller.scrollLeft >= oneSet * 2) shift = -oneSet
+      else if (scroller.scrollLeft < oneSet) shift = oneSet
+      if (shift !== 0) {
+        scroller.scrollLeft += shift
+        // Keep a long in-progress drag continuous across the wrap point.
+        if (dragging) startLeft += shift
+      }
+    }
+
+    const reduce = prefersReducedMotion()
+    // px/ms so that one cell scrolls past every `interval` ms — the same "one
+    // step per interval" cadence the hero uses. Disabled for reduced motion or
+    // interval <= 0; the reel is still draggable in those cases.
+    const velocity = () =>
+      interval > 0 && !reduce ? oneSet / items.length / interval : 0
+
+    let lastTouch = -Infinity
+    const touch = () => {
+      lastTouch = performance.now()
+    }
+
+    // Auto-scroll accumulates position in this float. The browser rounds
+    // scrollLeft to a whole pixel, so if we read it back each frame every
+    // sub-pixel step (any interval that works out to < ~1px/frame) would be
+    // rounded away and the reel would sit frozen. Owning the fractional
+    // position lets those small steps add up. While the visitor is driving,
+    // pos just tracks the real scrollLeft so auto-scroll resumes from there.
+    let pos = scroller.scrollLeft
+    let raf = 0
+    let prev = performance.now()
+    const tick = (t: number) => {
+      const dt = t - prev
+      prev = t
+      const idle = !dragging && t - lastTouch >= RESUME_DELAY_MS
+      const v = velocity()
+      if (idle && v > 0) {
+        pos += v * dt
+        if (oneSet > 0) {
+          if (pos >= oneSet * 2) pos -= oneSet
+          else if (pos < oneSet) pos += oneSet
+        }
+        scroller.scrollLeft = pos
+      } else {
+        // Paused (dragging or within the resume delay): the visitor owns the
+        // scroll position, so keep the accumulator synced to it.
+        pos = scroller.scrollLeft
+      }
+      raf = requestAnimationFrame(tick)
+    }
+    raf = requestAnimationFrame(tick)
+
+    // Trackpad/wheel and native touch scrolling: mark interaction, keep wrapped.
+    const onWheel = () => touch()
+    const onScroll = () => wrap()
+    scroller.addEventListener('wheel', onWheel, { passive: true })
+    scroller.addEventListener('scroll', onScroll, { passive: true })
+
+    // Mouse drag-to-scroll. Touch/pen fall through to native scrolling above.
+    const onPointerDown = (e: PointerEvent) => {
+      if (e.pointerType !== 'mouse') {
+        touch()
+        return
+      }
+      e.preventDefault()
+      dragging = true
+      startX = e.clientX
+      startLeft = scroller.scrollLeft
+      scroller.setPointerCapture(e.pointerId)
+      scroller.classList.add('is-dragging')
+    }
+    const onPointerMove = (e: PointerEvent) => {
+      if (!dragging) return
+      scroller.scrollLeft = startLeft - (e.clientX - startX)
+      touch()
+    }
+    const endDrag = (e: PointerEvent) => {
+      if (!dragging) return
+      dragging = false
+      touch() // start the resume timer from release, not from press
+      try {
+        scroller.releasePointerCapture(e.pointerId)
+      } catch {
+        /* pointer already released */
+      }
+      scroller.classList.remove('is-dragging')
+    }
+    scroller.addEventListener('pointerdown', onPointerDown)
+    scroller.addEventListener('pointermove', onPointerMove)
+    scroller.addEventListener('pointerup', endDrag)
+    scroller.addEventListener('pointercancel', endDrag)
+
+    const onResize = () => {
+      measure()
+      wrap()
+    }
+    window.addEventListener('resize', onResize)
+
+    return () => {
+      cancelAnimationFrame(raf)
+      scroller.removeEventListener('wheel', onWheel)
+      scroller.removeEventListener('scroll', onScroll)
+      scroller.removeEventListener('pointerdown', onPointerDown)
+      scroller.removeEventListener('pointermove', onPointerMove)
+      scroller.removeEventListener('pointerup', endDrag)
+      scroller.removeEventListener('pointercancel', endDrag)
+      window.removeEventListener('resize', onResize)
+    }
+  }, [items, interval])
+
   return (
     <div
       className="carousel-filmstrip"
@@ -179,24 +323,26 @@ function Filmstrip({
       aria-roledescription="carousel"
       aria-label={ariaLabel}
     >
-      <div className="carousel-reel-mask" ref={maskRef}>
-        <div className="carousel-reel">
-          {items.map((item, i) => (
-            <figure className="carousel-cell" key={i}>
-              <div className="carousel-cell-frame">
-                <Framed item={item} />
-              </div>
-              <figcaption className="carousel-cell-label">{item.title}</figcaption>
-            </figure>
-          ))}
-          {items.map((item, i) => (
-            <figure className="carousel-cell" key={`dup-${i}`} aria-hidden="true">
-              <div className="carousel-cell-frame">
-                <Framed item={item} />
-              </div>
-              <figcaption className="carousel-cell-label">{item.title}</figcaption>
-            </figure>
-          ))}
+      <div className="carousel-reel-mask" ref={scrollRef}>
+        <div className="carousel-reel" ref={reelRef}>
+          {Array.from({ length: REEL_COPIES }, (_, copy) =>
+            items.map((item, i) => (
+              <figure
+                className="carousel-cell"
+                key={`${copy}-${i}`}
+                // Only the first copy is exposed to assistive tech; the extra
+                // copies exist purely to make the scroll loop seamless.
+                aria-hidden={copy === 0 ? undefined : true}
+              >
+                <div className="carousel-cell-frame">
+                  <Framed item={item} />
+                </div>
+                <figcaption className="carousel-cell-label">
+                  {item.title}
+                </figcaption>
+              </figure>
+            )),
+          )}
         </div>
       </div>
     </div>

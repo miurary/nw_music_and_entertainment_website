@@ -41,7 +41,7 @@ const PAGES: Page[] = [
           items = {[...ARCADE_GAMES, ...POOL_TABLES, ...JUKEBOXES, ...PINBALL]}
           variant = "filmstrip"
           ariaLabel = "NW Entertainment & Music Equipment Showcase"
-          interval = {3500}
+          interval = {7000}
         />
         <div className="contact-card">
           <p className="contact-name">Blake Miura</p>

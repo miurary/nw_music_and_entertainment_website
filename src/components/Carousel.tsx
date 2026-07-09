@@ -175,6 +175,15 @@ const RESUME_DELAY_MS = 1200
     treated as a drag, so the click that follows doesn't also open the lightbox. */
 const DRAG_THRESHOLD_PX = 6
 
+/** Our own scrollLeft writes land within a pixel of the accumulator (the
+    browser only rounds); any larger divergence means the visitor — or their
+    fling's momentum — is driving the scroll. */
+const EXTERNAL_SCROLL_EPSILON_PX = 2
+
+/** How long scroll events must go quiet before we consider a native scroll
+    (touch pan / momentum fling / trackpad inertia) settled. */
+const SCROLL_SETTLE_MS = 200
+
 function Filmstrip({
   items,
   ariaLabel,
@@ -215,6 +224,15 @@ function Filmstrip({
     let startLeft = 0
     let activePointerId = -1
 
+    // Auto-scroll accumulates position in this float. The browser rounds
+    // scrollLeft to a whole pixel, so if we read it back each frame every
+    // sub-pixel step (any interval that works out to < ~1px/frame) would be
+    // rounded away and the reel would sit frozen. Owning the fractional
+    // position lets those small steps add up. While the visitor is driving,
+    // pos just tracks the real scrollLeft so auto-scroll resumes from there.
+    // It also serves as "where we last put it" for external-scroll detection.
+    let pos = scroller.scrollLeft
+
     const wrap = () => {
       if (oneSet <= 0) return
       let shift = 0
@@ -222,6 +240,9 @@ function Filmstrip({
       else if (scroller.scrollLeft < oneSet) shift = oneSet
       if (shift !== 0) {
         scroller.scrollLeft += shift
+        // Shift the accumulator too so the external-scroll check in onScroll
+        // doesn't mistake the wrap jump for the visitor driving.
+        pos += shift
         // Keep a long in-progress drag continuous across the wrap point.
         if (dragging) startLeft += shift
       }
@@ -239,13 +260,6 @@ function Filmstrip({
       lastTouch = performance.now()
     }
 
-    // Auto-scroll accumulates position in this float. The browser rounds
-    // scrollLeft to a whole pixel, so if we read it back each frame every
-    // sub-pixel step (any interval that works out to < ~1px/frame) would be
-    // rounded away and the reel would sit frozen. Owning the fractional
-    // position lets those small steps add up. While the visitor is driving,
-    // pos just tracks the real scrollLeft so auto-scroll resumes from there.
-    let pos = scroller.scrollLeft
     let raf = 0
     let prev = performance.now()
     const tick = (t: number) => {
@@ -269,9 +283,25 @@ function Filmstrip({
     }
     raf = requestAnimationFrame(tick)
 
-    // Trackpad/wheel and native touch scrolling: mark interaction, keep wrapped.
+    // Native scrolling (touch pan, momentum fling, trackpad/wheel inertia):
+    // never wrap mid-gesture — a programmatic scrollLeft write cancels native
+    // momentum dead, which is why flings used to hard-stop at a copy boundary
+    // (always showing the first item). Instead, mark the interaction so the
+    // auto-scroll stays out of the way, and only wrap once scroll events have
+    // gone quiet. At rest the wrap is invisible: the content one copy over is
+    // pixel-identical.
+    let settleTimer = 0
     const onWheel = () => touch()
-    const onScroll = () => wrap()
+    const onScroll = () => {
+      // Our own writes (auto-scroll tick, wrap, mouse drag) land within a
+      // pixel of pos; anything further means the visitor is driving.
+      if (Math.abs(scroller.scrollLeft - pos) <= EXTERNAL_SCROLL_EPSILON_PX)
+        return
+      pos = scroller.scrollLeft
+      touch()
+      window.clearTimeout(settleTimer)
+      settleTimer = window.setTimeout(wrap, SCROLL_SETTLE_MS)
+    }
     scroller.addEventListener('wheel', onWheel, { passive: true })
     scroller.addEventListener('scroll', onScroll, { passive: true })
 
@@ -306,6 +336,11 @@ function Filmstrip({
         scroller.classList.add('is-dragging')
       }
       scroller.scrollLeft = startLeft - dx
+      // Sync the accumulator and wrap immediately: this is our own write (no
+      // native momentum to cancel), and a long drag must wrap mid-gesture so
+      // it never runs into the physical end of the reel.
+      pos = scroller.scrollLeft
+      wrap()
       touch()
     }
     const endDrag = () => {
@@ -340,6 +375,7 @@ function Filmstrip({
 
     return () => {
       cancelAnimationFrame(raf)
+      window.clearTimeout(settleTimer)
       scroller.removeEventListener('wheel', onWheel)
       scroller.removeEventListener('scroll', onScroll)
       scroller.removeEventListener('pointerdown', onPointerDown)

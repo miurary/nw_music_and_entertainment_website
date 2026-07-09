@@ -37,6 +37,11 @@
   background: rgba(8, 9, 11, 0.93);
   cursor: zoom-out;
   animation: lightbox-fade 0.2s ease;
+  /* Let our touch handlers own the swipe-to-dismiss gesture instead of the
+     browser trying to scroll/zoom. */
+  touch-action: none;
+  user-select: none;
+  -webkit-user-select: none;
 }
 
 .lightbox-image {

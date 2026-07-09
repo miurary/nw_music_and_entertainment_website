@@ -1,6 +1,6 @@
 import { useEffect, useState, type ReactNode } from 'react'
-import { createPortal } from 'react-dom'
 import './Lightbox.css'
+import { LightboxOverlay } from './LightboxOverlay'
 
 export type LightboxImage = { src: string; alt: string }
 
@@ -31,32 +31,9 @@ export function useLightbox(): {
     }
   }, [image])
 
-  // The overlay is built inline (rather than as its own component) so this
-  // file exports only the hook, which keeps React Fast Refresh happy. Clicking
-  // anywhere — backdrop, image, or the close button — dismisses it.
-  const element = image
-    ? createPortal(
-        <div
-          className="lightbox-backdrop"
-          role="dialog"
-          aria-modal="true"
-          aria-label={`Full-size image of ${image.alt}`}
-          onClick={close}
-        >
-          <button
-            type="button"
-            className="lightbox-close"
-            aria-label="Close image"
-            onClick={close}
-            autoFocus
-          >
-            &times;
-          </button>
-          <img className="lightbox-image" src={image.src} alt={image.alt} />
-        </div>,
-        document.body,
-      )
-    : null
+  const element = image ? (
+    <LightboxOverlay image={image} onClose={close} />
+  ) : null
 
   return { open: setImage, close, element }
 }

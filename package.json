@@ -12,6 +12,8 @@
     "flatten-card": "node scripts/flatten-card.mjs"
   },
   "dependencies": {
+    "embla-carousel-auto-scroll": "^8.6.0",
+    "embla-carousel-react": "^8.6.0",
     "react": "^19.2.6",
     "react-dom": "^19.2.6"
   },

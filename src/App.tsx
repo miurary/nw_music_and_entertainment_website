@@ -34,7 +34,6 @@ const PAGES: Page[] = [
         </p>
         <Carousel
           items = {[...ARCADE_GAMES, ...POOL_TABLES, ...JUKEBOXES, ...PINBALL]}
-          variant = "filmstrip"
           ariaLabel = "NW Entertainment & Music Equipment Showcase"
           interval = {7000}
         />

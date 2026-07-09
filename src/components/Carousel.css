@@ -1,176 +1,44 @@
-/* Carousel — two looks sharing the site's brushed-metal frame:
-   a large "hero" slideshow and a scrolling "filmstrip" reel. */
+/* Carousel — a continuously drifting filmstrip reel in the site's
+   brushed-metal framing, driven by Embla (embla-carousel-react). */
 
-.carousel-hero,
 .carousel-filmstrip {
   margin-top: 24px;
 }
 
-/* --- Shared framed photo (blurred fill + contained image) ----------------- */
-.carousel-blur {
-  position: absolute;
-  inset: 0;
-  background-size: cover;
-  background-position: center;
-  filter: blur(22px) brightness(0.5);
-  transform: scale(1.15);
-}
-
-.carousel-image {
-  position: relative;
-  display: block;
-  width: 100%;
-  height: 100%;
-  object-fit: contain;
-}
-
-/* =========================================================================
-   Hero slideshow
-   ========================================================================= */
-.carousel-hero .carousel-stage {
-  position: relative;
-  aspect-ratio: 16 / 10;
+/* --- Embla structure: viewport clips, reel is the flex track --------------- */
+.carousel-viewport {
   overflow: hidden;
-  background: var(--gunmetal);
-  border: 1px solid var(--border);
-  border-radius: 9px;
-  box-shadow:
-    inset 0 2px 6px rgba(0, 0, 0, 0.4),
-    var(--shadow-plate);
-}
-
-.carousel-slide {
-  position: absolute;
-  inset: 0;
-  opacity: 0;
-  transition: opacity 0.6s ease;
-  pointer-events: none;
-}
-
-.carousel-slide.is-active {
-  opacity: 1;
-  pointer-events: auto;
-}
-
-.carousel-caption {
-  position: absolute;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  z-index: 2;
-  font-family: var(--display);
-  text-transform: uppercase;
-  letter-spacing: 1px;
-  font-weight: 700;
-  font-size: 15px;
-  color: #f2ede1;
-  padding: 26px 18px 14px;
-  background: linear-gradient(to top, rgba(0, 0, 0, 0.72), transparent);
-}
-
-.carousel-caption-diamond {
-  color: var(--brass-hi);
-  margin-right: 8px;
-  font-size: 11px;
-}
-
-.carousel-arrow {
-  position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
-  z-index: 3;
-  width: 44px;
-  height: 44px;
-  border-radius: 50%;
-  cursor: pointer;
-  border: 1px solid rgba(0, 0, 0, 0.4);
-  color: #1d1503;
-  background: linear-gradient(160deg, var(--brass-hi), var(--brass) 60%, #8a6420);
-  box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.5),
-    0 3px 6px -2px rgba(0, 0, 0, 0.5);
-  font-size: 22px;
-  font-family: var(--display);
-  line-height: 1;
-  display: grid;
-  place-items: center;
-  transition: filter 0.18s ease;
-}
-
-.carousel-arrow:hover {
-  filter: brightness(1.08);
-}
-
-.carousel-prev {
-  left: 12px;
-}
-
-.carousel-next {
-  right: 12px;
-}
-
-.carousel-dots {
-  display: flex;
-  gap: 9px;
-  justify-content: center;
-  margin-top: 16px;
-}
-
-.carousel-dot {
-  width: 11px;
-  height: 11px;
-  border-radius: 50%;
-  cursor: pointer;
-  padding: 0;
-  border: 1px solid rgba(0, 0, 0, 0.35);
-  background: var(--plate-lo);
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.4);
-  transition: background 0.18s ease;
-}
-
-.carousel-dot.is-active {
-  background: var(--brass);
-}
-
-/* =========================================================================
-   Filmstrip reel
-   ========================================================================= */
-.carousel-reel-mask {
-  overflow-x: auto;
-  overflow-y: hidden;
   padding: 6px 0;
-  /* Let horizontal drags/swipes pan the reel while vertical gestures still
-     scroll the page. Mouse drag is wired up in JS. */
-  touch-action: pan-x;
   cursor: grab;
-  scrollbar-width: none; /* Firefox — hide the scrollbar; drag/wheel still work */
 }
-.carousel-reel-mask::-webkit-scrollbar {
-  display: none; /* WebKit/Blink */
-}
-.carousel-reel-mask.is-dragging {
+
+.carousel-viewport:active {
   cursor: grabbing;
 }
 
 .carousel-reel {
   display: flex;
-  gap: 16px;
-  width: max-content;
-  /* Photos shouldn't hijack the drag as native image-drags or get selected. */
+  /* Embla loops by repositioning slides with transforms, so flex `gap` would
+     leave a wrong-sized seam at the loop point. Each cell carries its own
+     spacing (padding-left) instead; this margin hides the leading one. */
+  margin-left: -16px;
+  /* Horizontal drags pan the reel; vertical gestures still scroll the page. */
+  touch-action: pan-y pinch-zoom;
   user-select: none;
-}
-
-.carousel-reel .carousel-image {
-  -webkit-user-drag: none;
-  pointer-events: none;
+  backface-visibility: hidden;
 }
 
 .carousel-cell {
   flex: 0 0 auto;
-  width: 240px;
+  /* 240px of content + the 16px spacing carried as padding (border-box).
+     Must match CELL_TOTAL_WIDTH_PX in Carousel.tsx. */
+  width: 256px;
+  padding-left: 16px;
   margin: 0;
+  min-width: 0;
 }
 
+/* --- Framed photo (blurred fill + contained image) ------------------------- */
 .carousel-cell-frame {
   position: relative;
   display: block;
@@ -193,6 +61,26 @@
   outline-offset: 2px;
 }
 
+.carousel-blur {
+  position: absolute;
+  inset: 0;
+  background-size: cover;
+  background-position: center;
+  filter: blur(22px) brightness(0.5);
+  transform: scale(1.15);
+}
+
+.carousel-image {
+  position: relative;
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  /* Photos shouldn't hijack the drag as native image-drags or get selected. */
+  -webkit-user-drag: none;
+  pointer-events: none;
+}
+
 .carousel-cell-label {
   font-family: var(--display);
   text-transform: uppercase;
@@ -204,5 +92,5 @@
   margin-top: 8px;
 }
 
-/* Reduced motion is honored in JS (auto-scroll is skipped); the reel stays
-   fully draggable so the visitor can still browse the strip at their own pace. */
+/* Reduced motion is honored in JS (the AutoScroll plugin isn't attached); the
+   reel stays fully draggable so visitors can browse at their own pace. */

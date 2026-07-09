@@ -1,6 +1,6 @@
-import { useEffect, useRef, useState, type ReactNode } from 'react'
-import { createPortal } from 'react-dom'
+import { useEffect, useRef, type ReactNode } from 'react'
 import './CardShowcase.css'
+import { useLightbox } from './Lightbox'
 import type { CardItem } from '../utils/types'
 
 /** Fallback image used when an item provides no imageUrl/imageAltUrl. */
@@ -28,10 +28,7 @@ function CardShowcase({
   kicker,
 }: CardShowcaseProps): ReactNode {
   const listRef = useRef<HTMLUListElement>(null)
-  // The image currently shown fullscreen, or null when the lightbox is closed.
-  const [lightbox, setLightbox] = useState<{ src: string; alt: string } | null>(
-    null,
-  )
+  const lightbox = useLightbox()
 
   // Reveal each row as it scrolls into view.
   useEffect(() => {
@@ -53,20 +50,6 @@ function CardShowcase({
     return () => io.disconnect()
   }, [items])
 
-  // While the lightbox is open, lock page scroll and let Escape close it.
-  useEffect(() => {
-    if (!lightbox) return
-    const onKey = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') setLightbox(null)
-    }
-    document.body.style.overflow = 'hidden'
-    window.addEventListener('keydown', onKey)
-    return () => {
-      document.body.style.overflow = ''
-      window.removeEventListener('keydown', onKey)
-    }
-  }, [lightbox])
-
   if (items.length === 0) return null
 
   return (
@@ -85,7 +68,7 @@ function CardShowcase({
                   <button
                     type="button"
                     className="spec-photo-frame"
-                    onClick={() => setLightbox({ src, alt: item.title })}
+                    onClick={() => lightbox.open({ src, alt: item.title })}
                     aria-label={`View a larger image of ${item.title}`}
                   >
                     {/* A blurred, darkened copy of the same photo fills the
@@ -126,34 +109,7 @@ function CardShowcase({
       ))}
     </ul>
 
-    {lightbox &&
-      createPortal(
-        <div
-          className="lightbox-backdrop"
-          role="dialog"
-          aria-modal="true"
-          aria-label={`Full-size image of ${lightbox.alt}`}
-          onClick={() => setLightbox(null)}
-        >
-          <button
-            type="button"
-            className="lightbox-close"
-            aria-label="Close image"
-            onClick={() => setLightbox(null)}
-            autoFocus
-          >
-            &times;
-          </button>
-          {/* Tapping anywhere (backdrop or image) closes; the image is inside
-              the backdrop so the click bubbles up. */}
-          <img
-            className="lightbox-image"
-            src={lightbox.src}
-            alt={lightbox.alt}
-          />
-        </div>,
-        document.body,
-      )}
+    {lightbox.element}
     </>
   )
 }

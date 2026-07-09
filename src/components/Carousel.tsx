@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState, type ReactNode } from 'react'
 import './Carousel.css'
+import { useLightbox } from './Lightbox'
 import type { CardItem } from '../utils/types'
 
 /** Fallback image used when an item provides no imageUrl/imageAltUrl. */
@@ -170,6 +171,10 @@ const REEL_COPIES = 3
     auto-scroll takes over again so it doesn't fight trackpad/wheel momentum. */
 const RESUME_DELAY_MS = 1200
 
+/** A mouse pointer that moves more than this (px) between press and release is
+    treated as a drag, so the click that follows doesn't also open the lightbox. */
+const DRAG_THRESHOLD_PX = 6
+
 function Filmstrip({
   items,
   ariaLabel,
@@ -181,6 +186,10 @@ function Filmstrip({
 }): ReactNode {
   const scrollRef = useRef<HTMLDivElement>(null)
   const reelRef = useRef<HTMLDivElement>(null)
+  // Set true while a mouse drag is in progress so the trailing click is ignored
+  // instead of opening the lightbox. Read by each cell's onClick.
+  const draggedRef = useRef(false)
+  const lightbox = useLightbox()
 
   useEffect(() => {
     const scroller = scrollRef.current
@@ -200,9 +209,11 @@ function Filmstrip({
 
     // Drag state is declared before wrap() so wrap can keep the drag anchor in
     // sync when it shifts scrollLeft mid-drag (see below).
+    let pointerDown = false
     let dragging = false
     let startX = 0
     let startLeft = 0
+    let activePointerId = -1
 
     const wrap = () => {
       if (oneSet <= 0) return
@@ -270,24 +281,47 @@ function Filmstrip({
         touch()
         return
       }
-      e.preventDefault()
-      dragging = true
+      // Don't capture the pointer or preventDefault yet: a plain click must keep
+      // its native `click` event so the cell can open the lightbox. We only
+      // begin dragging (and capture) once the pointer actually moves past the
+      // threshold, in onPointerMove.
+      pointerDown = true
+      dragging = false
+      draggedRef.current = false
       startX = e.clientX
       startLeft = scroller.scrollLeft
-      scroller.setPointerCapture(e.pointerId)
-      scroller.classList.add('is-dragging')
-    }
-    const onPointerMove = (e: PointerEvent) => {
-      if (!dragging) return
-      scroller.scrollLeft = startLeft - (e.clientX - startX)
+      activePointerId = e.pointerId
       touch()
     }
-    const endDrag = (e: PointerEvent) => {
-      if (!dragging) return
-      dragging = false
+    const onPointerMove = (e: PointerEvent) => {
+      if (!pointerDown) return
+      const dx = e.clientX - startX
+      if (!dragging) {
+        if (Math.abs(dx) <= DRAG_THRESHOLD_PX) return
+        // Crossed the threshold: promote to a drag. Capturing now (not on press)
+        // is what keeps a plain click's `click` event intact.
+        dragging = true
+        draggedRef.current = true
+        scroller.setPointerCapture(activePointerId)
+        scroller.classList.add('is-dragging')
+      }
+      scroller.scrollLeft = startLeft - dx
+      touch()
+    }
+    const endDrag = () => {
+      if (!pointerDown) return
+      pointerDown = false
       touch() // start the resume timer from release, not from press
+      if (!dragging) return // was a plain click; let it open the lightbox
+      dragging = false
+      // Clear the drag flag on the next tick — after the click that this
+      // pointerup triggers has been handled — so future keyboard/plain clicks
+      // aren't swallowed.
+      setTimeout(() => {
+        draggedRef.current = false
+      }, 0)
       try {
-        scroller.releasePointerCapture(e.pointerId)
+        scroller.releasePointerCapture(activePointerId)
       } catch {
         /* pointer already released */
       }
@@ -334,9 +368,20 @@ function Filmstrip({
                 // copies exist purely to make the scroll loop seamless.
                 aria-hidden={copy === 0 ? undefined : true}
               >
-                <div className="carousel-cell-frame">
+                <button
+                  type="button"
+                  className="carousel-cell-frame"
+                  // Duplicate copies are aria-hidden, so keep them out of the
+                  // tab order while still clickable by mouse/touch.
+                  tabIndex={copy === 0 ? undefined : -1}
+                  aria-label={`View a larger image of ${item.title}`}
+                  onClick={() => {
+                    if (draggedRef.current) return
+                    lightbox.open({ src: srcOf(item), alt: item.title })
+                  }}
+                >
                   <Framed item={item} />
-                </div>
+                </button>
                 <figcaption className="carousel-cell-label">
                   {item.title}
                 </figcaption>
@@ -345,6 +390,7 @@ function Filmstrip({
           )}
         </div>
       </div>
+      {lightbox.element}
     </div>
   )
 }

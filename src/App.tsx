@@ -10,6 +10,7 @@ import jukeboxBanner from './assets/jukeboxes/virtuo.webp'
 import type { Page } from './utils/types'
 import { ARCADE_GAMES, POOL_TABLES, JUKEBOXES, PINBALL } from './utils/types'
 import Carousel from './components/Carousel'
+import { ClickableImage } from './components/ClickableImage'
 
 // Decorative triptych shown in the header banner: one machine from each of the
 // headline categories. Purely visual, so it's marked aria-hidden in the markup.
@@ -184,8 +185,8 @@ const PAGES: Page[] = [
           We serve venues throughout the Pacific Northwest. Reach out to confirm
           coverage in your area.
         </p>
-        <img
-          className="location-map"
+        <ClickableImage
+          imgClassName="location-map"
           src={locationsMap}
           alt="Map of our service area across the Pacific Northwest"
         />

@@ -164,8 +164,10 @@ function Hero({
 
 /** Copies of the item list rendered side by side so the scroll can wrap
     seamlessly in either direction. Three is the minimum that keeps content on
-    both sides of the middle copy at every wrap point. */
-const REEL_COPIES = 3
+    both sides of the middle copy at every wrap point. 
+    
+    Bumping this due to bouncing on mobile hard scroll */
+const REEL_COPIES = 7
 
 /** After the visitor stops touching the reel, wait this long before the
     auto-scroll takes over again so it doesn't fight trackpad/wheel momentum. */

@@ -1,126 +1,89 @@
-import { type ReactNode } from 'react'
+import { useEffect, useState, type ReactNode } from 'react'
 import useEmblaCarousel from 'embla-carousel-react'
-import AutoScroll from 'embla-carousel-auto-scroll'
+import type { EmblaOptionsType, EmblaPluginType } from 'embla-carousel'
+// import Accessibility from 'embla-carousel-accessibility' # TODO: Add when embla-carousel@9.0.0 is stable release
 import './Carousel.css'
-import { useLightbox } from './Lightbox'
-import type { CardItem } from '../utils/types'
-
-/** Fallback image used when an item provides no imageUrl/imageAltUrl. */
-const PLACEHOLDER_IMAGE_URL = 'https://placehold.co/640x480?text=No+Image'
-
-/** Resolve an item's best available image source. */
-function srcOf(item: CardItem): string {
-  return item.imageUrl ?? item.imageAltUrl ?? PLACEHOLDER_IMAGE_URL
-}
-
-/** Cell sizing must match .carousel-cell in Carousel.css: content width plus
-    the per-cell spacing, used to convert `interval` into a scroll speed. */
-const CELL_TOTAL_WIDTH_PX = 240 + 16
-
-/** After the visitor stops interacting, wait this long before the auto-scroll
-    resumes so it doesn't fight the tail end of a drag or fling. */
-const RESUME_DELAY_MS = 1200
 
 export type CarouselProps = {
-  /** The items to display. Uses each item's image and title. */
-  items: CardItem[]
+  /** The slide cells to render inside the reel. Each child should be a
+      flex-sized cell — reuse `.carousel-cell` or supply a variant class. */
+  children: ReactNode
   /** Accessible label for the carousel region. */
   ariaLabel?: string
-  /** Auto-scroll pace: one cell width per `interval` ms. Pass 0 to disable. */
-  interval?: number
-}
-
-/** Reduced-motion preference, checked once per mount (no live updates needed). */
-function prefersReducedMotion(): boolean {
-  return (
-    typeof window !== 'undefined' &&
-    window.matchMedia?.('(prefers-reduced-motion: reduce)').matches
-  )
-}
-
-/** Embla's AutoScroll speed is px per ~60fps frame; ours is one cell per
-    `interval` ms. */
-function speedFor(interval: number): number {
-  return (CELL_TOTAL_WIDTH_PX * (1000 / 60)) / interval
+  /** Embla options, passed straight through. Omit for Embla's snapping
+      defaults; the drifting filmstrip opts into `{ loop, dragFree, skipSnaps }`. */
+  options?: EmblaOptionsType
+  /** Embla plugins (e.g. AutoScroll). The caller owns reduced-motion gating,
+      since only it knows whether a given plugin animates. */
+  plugins?: EmblaPluginType[]
+  /** Extra class on the filmstrip wrapper, for per-variant styling. */
+  className?: string
+  /** Show clickable dot indicators, one per scroll snap. Suits snapping,
+      one-slide-at-a-time variants; pointless on the free-drifting filmstrip. */
+  showDots?: boolean
 }
 
 /**
- * A continuously drifting filmstrip of photos in the site's brushed-metal
- * framing, built on Embla. Loops seamlessly in both directions, drags/flings
- * naturally on mouse and touch, and resumes its drift shortly after the
- * visitor lets go. Clicking a photo opens it in the shared fullscreen
- * lightbox; Embla suppresses the click that trails a drag, so dragging never
- * accidentally opens one. A blurred copy of each photo fills its frame so
- * off-shape images have no flat dead area.
+ * Generic Embla carousel shell: a clipping viewport wrapping a flex reel of
+ * caller-supplied cells. It owns only the Embla wiring and the framing markup;
+ * what each slide looks like, how it scrolls, and any per-cell behavior
+ * (lightbox, links) belong to the caller's children. See PhotoReel for the
+ * drifting equipment filmstrip built on top of this.
  */
 function Carousel({
-  items,
-  ariaLabel = 'Photo showcase',
-  interval = 3500,
+  children,
+  ariaLabel = 'Carousel',
+  options,
+  plugins,
+  className,
+  showDots = false,
 }: CarouselProps): ReactNode {
-  const lightbox = useLightbox()
+  const [viewportRef, emblaApi] = useEmblaCarousel(options, plugins ?? [])
+  const [snaps, setSnaps] = useState<number[]>([])
+  const [selectedIndex, setSelectedIndex] = useState(0)
 
-  const autoScroll =
-    interval > 0 && items.length > 1 && !prefersReducedMotion()
-  const [viewportRef] = useEmblaCarousel(
-    { loop: true, dragFree: true, skipSnaps: true },
-    autoScroll
-      ? [
-          AutoScroll({
-            speed: speedFor(interval),
-            startDelay: RESUME_DELAY_MS,
-            // Resume the drift after every interaction instead of stopping
-            // for good the first time the visitor touches the reel.
-            stopOnInteraction: false,
-          }),
-        ]
-      : [],
-  )
-
-  if (items.length === 0) return null
+  // Mirror Embla's scroll-snap state into React so the dots can render and
+  // highlight the active slide. Only wired up when dots are actually shown.
+  useEffect(() => {
+    if (!showDots || !emblaApi) return
+    const onSelect = () => setSelectedIndex(emblaApi.selectedScrollSnap())
+    const onReInit = () => {
+      setSnaps(emblaApi.scrollSnapList())
+      onSelect()
+    }
+    onReInit()
+    emblaApi.on('select', onSelect).on('reInit', onReInit)
+    return () => {
+      emblaApi.off('select', onSelect).off('reInit', onReInit)
+    }
+  }, [emblaApi, showDots])
 
   return (
     <div
-      className="carousel-filmstrip"
+      className={'carousel-filmstrip' + (className ? ' ' + className : '')}
       role="group"
       aria-roledescription="carousel"
       aria-label={ariaLabel}
     >
       <div className="carousel-viewport" ref={viewportRef}>
-        <div className="carousel-reel">
-          {items.map((item, i) => (
-            <figure className="carousel-cell" key={i}>
-              <button
-                type="button"
-                className="carousel-cell-frame"
-                aria-label={`View a larger image of ${item.title}`}
-                onClick={() =>
-                  lightbox.open({ src: srcOf(item), alt: item.title })
-                }
-              >
-                {/* A blurred, darkened copy of the same photo fills the
-                    letterbox space so off-shape images have no flat dead
-                    area behind them. */}
-                <div
-                  className="carousel-blur"
-                  style={{ backgroundImage: `url(${srcOf(item)})` }}
-                  aria-hidden="true"
-                />
-                <img
-                  className="carousel-image"
-                  src={srcOf(item)}
-                  alt={item.title}
-                  loading="lazy"
-                />
-              </button>
-              <figcaption className="carousel-cell-label">
-                {item.title}
-              </figcaption>
-            </figure>
+        <div className="carousel-reel">{children}</div>
+      </div>
+      {showDots && snaps.length > 1 && (
+        <div className="carousel-dots">
+          {snaps.map((_, i) => (
+            <button
+              key={i}
+              type="button"
+              className={
+                'carousel-dot' + (i === selectedIndex ? ' is-selected' : '')
+              }
+              aria-label={`Go to slide ${i + 1}`}
+              aria-current={i === selectedIndex}
+              onClick={() => emblaApi?.scrollTo(i)}
+            />
           ))}
         </div>
-      </div>
-      {lightbox.element}
+      )}
     </div>
   )
 }

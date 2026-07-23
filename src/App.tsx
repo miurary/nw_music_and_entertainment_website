@@ -8,9 +8,19 @@ import jawsBanner from './assets/pinball/jaws2.webp'
 import poolBanner from './assets/pool_tables/diamondsmart.webp'
 import jukeboxBanner from './assets/jukeboxes/virtuo.webp'
 import type { Page } from './utils/types'
-import { ARCADE_GAMES, POOL_TABLES, JUKEBOXES, PINBALL } from './utils/types'
+import { ARCADE_GAMES, POOL_TABLES, JUKEBOXES, PINBALL, TESTIMONIALS } from './utils/types'
 import Carousel from './components/Carousel'
+import PhotoReel from './components/PhotoReel'
 import { ClickableImage } from './components/ClickableImage'
+
+/** First + last initial of a name, e.g. 'Timothy V. Erickson' -> 'TE'. */
+function initialsOf(name: string): string {
+  const parts = name.trim().split(/\s+/).filter(Boolean)
+  if (parts.length === 0) return ''
+  const first = parts[0][0]
+  const last = parts.length > 1 ? parts[parts.length - 1][0] : ''
+  return (first + last).toUpperCase()
+}
 
 // Decorative triptych shown in the header banner: one machine from each of the
 // headline categories. Purely visual, so it's marked aria-hidden in the markup.
@@ -32,7 +42,7 @@ const PAGES: Page[] = [
           jukeboxes, pool tables, ATMs, and full-service amusement equipment to
           businesses across the region.
         </p>
-        <Carousel
+        <PhotoReel
           items = {[...ARCADE_GAMES, ...POOL_TABLES, ...JUKEBOXES, ...PINBALL]}
           ariaLabel = "NW Entertainment & Music Equipment Showcase"
           interval = {7000}
@@ -78,9 +88,81 @@ const PAGES: Page[] = [
     label: 'Testimonials',
     title: 'Testimonials',
     body: (
-      <p>
-        Coming soon.
-      </p>
+      <>
+        <Carousel
+          ariaLabel="Customer testimonials"
+          className="carousel--wide"
+          options={{ align: 'center' }}
+          showDots
+        >
+          {TESTIMONIALS.map((t) => (
+            <figure className="testimonial-cell" key={t.id}>
+              <div className="testimonial-card">
+                {/*<div className="testimonial-eyebrow">
+                  <span className="testimonial-diamond" aria-hidden="true">
+                    &#x25C6;
+                  </span>
+                  {t.businessName}
+                </div>*/}
+
+                {t.headline && (
+                  <p className="testimonial-headline">{t.businessName}</p>
+                )}
+
+                <span className="testimonial-quotemark" aria-hidden="true">
+                  &ldquo;
+                </span>
+                <blockquote className="testimonial-quote">
+                  {t.lead && (
+                    <span className="testimonial-lead">{t.lead} </span>
+                  )}
+                  {t.body}
+                </blockquote>
+
+                <div className="testimonial-rule" aria-hidden="true" />
+
+                {t.owner && (
+                  <div className="testimonial-byline">
+                    <span className="testimonial-medallion" aria-hidden="true">
+                      {initialsOf(t.owner)}
+                    </span>
+                    <span className="testimonial-byline-text">
+                      <span className="testimonial-name">{t.owner}</span>
+                      {(t.role || t.businessName) && (
+                        <span className="testimonial-role">
+                          {[t.role, t.businessName]
+                            .filter(Boolean)
+                            .join(' · ')}
+                        </span>
+                      )}
+                    </span>
+                  </div>
+                )}
+
+                {t.images.length > 0 && (
+                  <div className="testimonial-installs">
+                    <div className="testimonial-photos-label">
+                      Installed on site
+                    </div>
+                    <div className="testimonial-photos">
+                      {t.images.map((img) => (
+                        <ClickableImage
+                          key={img.src}
+                          src={img.src}
+                          alt={img.alt}
+                        />
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </div>
+            </figure>
+          ))}
+        </Carousel>
+        {TESTIMONIALS.length > 1 && (
+          <div className="carousel-hint">&#x2039; Swipe for more &#x203A;</div>
+        )}
+      </>
     ),
   },
   {

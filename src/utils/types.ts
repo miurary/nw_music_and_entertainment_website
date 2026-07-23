@@ -8,6 +8,8 @@ import kingkong from '../assets/pinball/kingkong.webp'
 import smart from '../assets/pool_tables/diamondsmart.webp'
 import angelina from '../assets/jukeboxes/angelina.webp'
 import virtuo from '../assets/jukeboxes/virtuo.webp'
+import silver_star_1 from '../assets/testimonials/silver_star/silver_star_1.webp'
+import silver_star_2 from '../assets/testimonials/silver_star/silver_star_2.webp'
 
 export type Page = {
   id: string
@@ -32,6 +34,49 @@ export type CardItem = {
   dimensions?: string
   weight?: string
 }
+
+export type Testimonial = {
+  id: string
+  /** Business the testimonial is from — shown in the eyebrow and byline. */
+  businessName: string
+  /** Optional short editorial headline pulled from the testimonial. Omit to
+      render no headline (space is not reserved). */
+  headline?: string
+  /** Emphasized lead sentence of the quote; rendered in darker, heavier type. */
+  lead?: string
+  /** The rest of the quote, following the lead. */
+  body: string
+  /** Owner's full name — drives the byline and its medallion initials. Omit to
+      hide the attribution row entirely. */
+  owner?: string
+  /** Owner's title/role, e.g. 'President, Erickco Inc.'. */
+  role?: string
+  /** Supporting install photos, shown as a 2-up thumbnail grid below the quote. */
+  images: { src: string; alt: string }[]
+}
+
+export const TESTIMONIALS: Testimonial[] = [
+  {
+    id: 'silver-star',
+    businessName: 'Silver Star Saloon',
+    // Editorial headline — review/replace with the owner's preferred phrasing.
+    headline: 'Ten Years, One Handshake',
+    owner: 'Timothy V. Erickson',
+    role: 'President, Erickco Inc.',
+    lead: `It's been my pleasure to have had Blake Miura and his company, NW Entertainment & Music, as my coin operator for the past 10 years.`,
+    body: `He has been nothing short of exceptional in his service and reliability. Blake has never made a promise he didn't keep or a problem he didn't doggedly pursue the solution to. We have been, and will continue to be, partners working together for the benefit and in the service of each others business. I can't recommend Blake and his company more enthusiastically other than to say that after almost 27 years in the hospitality business I have not dealt with a more honest or honorable person than Blake Miura.`,
+    images: [
+      { src: silver_star_1, alt: 'Arcade games and jukeboxes installed at Silver Star Saloon' },
+      { src: silver_star_2, alt: 'Pool tables installed at Silver Star Saloon' },
+    ],
+  },
+  {
+    id: 'coming-soon',
+    businessName: 'Your business here',
+    body: 'Testimonial coming soon.',
+    images: [],
+  },
+]
 
 export const ARCADE_GAMES: CardItem[] = [
   {

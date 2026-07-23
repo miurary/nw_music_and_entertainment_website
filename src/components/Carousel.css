@@ -94,3 +94,257 @@
 
 /* Reduced motion is honored in JS (the AutoScroll plugin isn't attached); the
    reel stays fully draggable so visitors can browse at their own pace. */
+
+/* --- Wide variant: one card at a time, with a peek (e.g. testimonials) ----- */
+/* Each slide is a hair under full width so a sliver of the neighboring card
+   peeks in — the cue that the reel is swipeable. The reel's -16px margin +
+   16px cell padding seam trick (see .carousel-reel) still applies under
+   border-box. `display:flex` lets the inner .testimonial-card stretch so
+   adjacent cards share a height. */
+.carousel--wide .testimonial-cell {
+  flex: 0 0 90%;
+  display: flex;
+  padding-left: 16px;
+  margin: 0;
+  min-width: 0;
+}
+
+/* The stamped-metal plate. Mobile-first: fills the slide. On wider screens it
+   caps to a comfortable reading width and centers, so quote lines don't run
+   long — the neighboring card still peeks past it. */
+.testimonial-card {
+  position: relative;
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  padding: 22px 22px 24px;
+  background: linear-gradient(160deg, var(--panel), var(--plate));
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  /* Diffuse cast to lift the card off the background, plus the plate's inset
+     hairlines for the milled-edge catch. */
+  box-shadow:
+    0 16px 40px -18px rgba(0, 0, 0, 0.4),
+    var(--shadow-plate);
+}
+
+@media (min-width: 700px) {
+  .testimonial-card {
+    flex: 0 1 620px;
+    margin: 0 auto;
+  }
+}
+
+/* Brass top edge, clipped to the card's rounded corners by overflow:hidden. */
+.testimonial-card::before {
+  content: '';
+  position: absolute;
+  inset: 0 0 auto 0;
+  height: 4px;
+  background: linear-gradient(
+    90deg,
+    var(--brass),
+    var(--brass-hi) 60%,
+    var(--brass)
+  );
+}
+
+/* Business-identity eyebrow: brass diamond + business name. */
+.testimonial-eyebrow {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--display);
+  text-transform: uppercase;
+  font-weight: 700;
+  font-size: 11px;
+  letter-spacing: 1.2px;
+  color: var(--text-muted);
+}
+
+.testimonial-diamond {
+  color: var(--brass);
+  font-size: 8px;
+}
+
+.testimonial-headline {
+  margin: 10px 0 0;
+  font-family: var(--display);
+  text-transform: uppercase;
+  font-weight: 800;
+  font-size: 26px;
+  line-height: 1.02;
+  color: var(--ink);
+  text-shadow: var(--emboss-light);
+}
+
+/* Oversized decorative quote mark; line-height:0 keeps it from claiming a full
+   line box, so it tucks just above the quote instead of pushing it down. */
+.testimonial-quotemark {
+  display: block;
+  height: 30px;
+  margin-top: 14px;
+  font-family: var(--body);
+  font-size: 64px;
+  line-height: 0.75;
+  color: var(--brass);
+  text-shadow: var(--engrave);
+}
+
+.testimonial-quote {
+  margin: 0;
+  color: var(--ink-soft);
+  font-size: 18px;
+  line-height: 1.62;
+}
+
+/* Lead sentence: darker ink + a touch more weight to pull the eye in first. */
+.testimonial-lead {
+  color: var(--ink);
+  font-weight: 500;
+}
+
+.testimonial-rule {
+  width: 56px;
+  height: 3px;
+  margin: 20px 0 16px;
+  border-radius: 2px;
+  background: linear-gradient(90deg, var(--brass), var(--brass-hi));
+}
+
+/* Attribution byline: initials medallion + name/role. */
+.testimonial-byline {
+  display: flex;
+  align-items: center;
+  gap: 13px;
+}
+
+.testimonial-medallion {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 46px;
+  height: 46px;
+  border-radius: 50%;
+  background: linear-gradient(
+    155deg,
+    var(--plate-hi),
+    var(--plate) 60%,
+    var(--plate-lo)
+  );
+  border: 1px solid var(--border);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.6);
+  font-family: var(--display);
+  font-weight: 800;
+  font-size: 16px;
+  color: var(--ink);
+}
+
+.testimonial-byline-text {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.testimonial-name {
+  font-family: var(--display);
+  text-transform: uppercase;
+  font-weight: 700;
+  font-size: 15px;
+  letter-spacing: 0.8px;
+  color: var(--ink);
+}
+
+.testimonial-role {
+  font-family: var(--body);
+  font-size: 13px;
+  color: var(--text-muted);
+}
+
+/* Supporting install photos, demoted below the quote. */
+.testimonial-installs {
+  margin-top: 22px;
+}
+
+.testimonial-photos-label {
+  margin-bottom: 10px;
+  font-family: var(--display);
+  text-transform: uppercase;
+  font-weight: 700;
+  font-size: 11px;
+  letter-spacing: 1.2px;
+  color: var(--text-muted);
+}
+
+.testimonial-photos {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+/* Each ClickableImage is a grid cell; let its trigger fill the column. */
+.testimonial-photos .lightbox-trigger {
+  width: 100%;
+}
+
+.testimonial-photos img {
+  display: block;
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+  background: var(--gunmetal);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.35);
+  -webkit-user-drag: none;
+  /* Let the reel's drag pass through instead of ghost-dragging the image; the
+     trigger button still receives the click Embla allows through. */
+  pointer-events: none;
+}
+
+/* --- Dot indicators -------------------------------------------------------- */
+.carousel-dots {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 16px;
+}
+
+.carousel-dot {
+  width: 11px;
+  height: 11px;
+  padding: 0;
+  border-radius: 50%;
+  border: 1px solid var(--border);
+  background: var(--gunmetal);
+  cursor: pointer;
+  appearance: none;
+  transition: background-color 0.2s ease, transform 0.2s ease;
+}
+
+.carousel-dot:hover {
+  background: var(--ink-soft);
+}
+
+.carousel-dot.is-selected {
+  background: var(--brass);
+  border-color: var(--brass);
+  transform: scale(1.15);
+}
+
+.carousel-dot:focus-visible {
+  outline: 3px solid var(--brass);
+  outline-offset: 2px;
+}
+
+/* --- Swipe hint ------------------------------------------------------------ */
+.carousel-hint {
+  margin-top: 10px;
+  font-family: var(--display);
+  text-transform: uppercase;
+  font-size: 11px;
+  letter-spacing: 1.4px;
+  color: var(--text-muted);
+  text-align: center;
+}

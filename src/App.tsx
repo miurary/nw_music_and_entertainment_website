@@ -117,12 +117,20 @@ const PAGES: Page[] = [
                   </div>
                 )}
 
+                <span className="testimonial-qmark" aria-hidden="true">
+                  &ldquo;
+                </span>
+
                 <blockquote className="testimonial-quote">
                   {t.lead && (
                     <span>{t.lead} </span>
                   )}
                   {t.body}
                 </blockquote>
+
+                <span className="testimonial-qmark" aria-hidden="true">
+                  &rdquo;
+                </span>
 
                 <div className="testimonial-rule" aria-hidden="true" />
 

@@ -180,10 +180,10 @@
 
 /* Oversized decorative quote mark; line-height:0 keeps it from claiming a full
    line box, so it tucks just above the quote instead of pushing it down. */
-.testimonial-quotemark {
+.testimonial-qmark {
   display: block;
   height: 30px;
-  margin-top: 14px;
+  margin-top: 30px;
   font-family: var(--body);
   font-size: 64px;
   line-height: 0.75;
@@ -192,7 +192,7 @@
 }
 
 .testimonial-quote {
-  margin: 20px 0 0 0;
+  margin: 0;
   color: var(--ink);
   font-size: 18px;
   line-height: 1.62;

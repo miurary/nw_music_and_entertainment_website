@@ -98,23 +98,28 @@ const PAGES: Page[] = [
           {TESTIMONIALS.map((t) => (
             <figure className="testimonial-cell" key={t.id}>
               <div className="testimonial-card">
-                {/*<div className="testimonial-eyebrow">
-                  <span className="testimonial-diamond" aria-hidden="true">
-                    &#x25C6;
-                  </span>
-                  {t.businessName}
-                </div>*/}
 
                 {t.headline && (
                   <p className="testimonial-headline">{t.businessName}</p>
                 )}
 
-                <span className="testimonial-quotemark" aria-hidden="true">
-                  &ldquo;
-                </span>
+                {t.images.length > 0 && (
+                  <div className="testimonial-installs">
+                    <div className="testimonial-photos">
+                      {t.images.map((img) => (
+                        <ClickableImage
+                          key={img.src}
+                          src={img.src}
+                          alt={img.alt}
+                        />
+                      ))}
+                    </div>
+                  </div>
+                )}
+
                 <blockquote className="testimonial-quote">
                   {t.lead && (
-                    <span className="testimonial-lead">{t.lead} </span>
+                    <span>{t.lead} </span>
                   )}
                   {t.body}
                 </blockquote>
@@ -136,23 +141,6 @@ const PAGES: Page[] = [
                         </span>
                       )}
                     </span>
-                  </div>
-                )}
-
-                {t.images.length > 0 && (
-                  <div className="testimonial-installs">
-                    <div className="testimonial-photos-label">
-                      Installed on site
-                    </div>
-                    <div className="testimonial-photos">
-                      {t.images.map((img) => (
-                        <ClickableImage
-                          key={img.src}
-                          src={img.src}
-                          alt={img.alt}
-                        />
-                      ))}
-                    </div>
                   </div>
                 )}
               </div>

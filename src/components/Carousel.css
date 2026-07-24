@@ -192,7 +192,7 @@
 }
 
 .testimonial-quote {
-  margin: 0;
+  margin: 20px 0 0 0;
   color: var(--ink);
   font-size: 18px;
   line-height: 1.62;

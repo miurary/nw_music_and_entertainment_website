@@ -128,10 +128,6 @@ const PAGES: Page[] = [
                   {t.body}
                 </blockquote>
 
-                <span className="testimonial-qmark" aria-hidden="true">
-                  &rdquo;
-                </span>
-
                 <div className="testimonial-rule" aria-hidden="true" />
 
                 {t.owner && (

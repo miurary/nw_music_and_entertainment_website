@@ -10,6 +10,8 @@ import angelina from '../assets/jukeboxes/angelina.webp'
 import virtuo from '../assets/jukeboxes/virtuo.webp'
 import silver_star_1 from '../assets/testimonials/silver_star/silver_star_1.webp'
 import silver_star_2 from '../assets/testimonials/silver_star/silver_star_2.webp'
+import stanley_1 from '../assets/testimonials/stanleys/stanley_1.webp'
+import stanley_2 from '../assets/testimonials/stanleys/stanley_2.webp'
 
 export type Page = {
   id: string
@@ -42,6 +44,9 @@ export type Testimonial = {
   /** Optional short editorial headline pulled from the testimonial. Omit to
       render no headline (space is not reserved). */
   headline?: string
+  /** Where the business is, e.g. 'Vancouver, WA'. Rendered as a subheader under
+      the headline; omit to render nothing. */
+  location?: string
   /** Emphasized lead sentence of the quote; rendered in darker, heavier type. */
   lead?: string
   /** The rest of the quote, following the lead. */
@@ -58,9 +63,9 @@ export type Testimonial = {
 export const TESTIMONIALS: Testimonial[] = [
   {
     id: 'silver-star',
+    headline: 'Silver Star Saloon',
     businessName: 'Silver Star Saloon',
-    // Editorial headline — review/replace with the owner's preferred phrasing.
-    headline: 'Ten Years, One Handshake',
+    location: 'Vancouver, WA',
     owner: 'Timothy V. Erickson',
     role: 'President, Erickco Inc.',
     lead: `It's been my pleasure to have had Blake Miura and his company, NW Entertainment & Music, as my coin operator for the past 10 years.`,
@@ -71,10 +76,16 @@ export const TESTIMONIALS: Testimonial[] = [
     ],
   },
   {
-    id: 'coming-soon',
-    businessName: 'Your business here',
-    body: 'Testimonial coming soon.',
-    images: [],
+    id: '82nd-bar-and-grill',
+    headline: `Stanley's Corner`,
+    businessName: `Stanley's Corner, 82nd Bar and Grill, Ace Tavern 2`,
+    location: 'Portland, OR',
+    owner: '88 Badillo Inc.',
+    body: `I've partnered with NW Entertainment & Music for the past 15 years across multiple of my locations. The quality of service is what has kept the relationship intact. Very reliable, equipment always kept up to date with maintenance and professional service. For any business managing multiple venues, NW Entertainment & Music offers a rare combination of reliability, adaptability, and genuine professionalism. Fifteen years in, I still don't hesitate to recommend them.`,
+    images: [
+      { src: stanley_1, alt: `Pinball installed at Stanley's Corner` },
+      { src: stanley_2, alt: `Pool tables installed at Stanley's Corner` },
+    ],
   },
 ]
 

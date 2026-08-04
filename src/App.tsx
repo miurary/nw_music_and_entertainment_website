@@ -100,7 +100,11 @@ const PAGES: Page[] = [
               <div className="testimonial-card">
 
                 {t.headline && (
-                  <p className="testimonial-headline">{t.businessName}</p>
+                  <p className="testimonial-headline">{t.headline}</p>
+                )}
+
+                {t.location && (
+                  <p className="testimonial-location">{t.location}</p>
                 )}
 
                 {t.images.length > 0 && (

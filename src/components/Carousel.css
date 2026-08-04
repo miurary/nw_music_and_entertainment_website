@@ -178,6 +178,18 @@
   text-shadow: var(--emboss-light);
 }
 
+/* Location subheader: a quieter echo of the headline, set in muted ink so it
+   reads as a caption rather than a second title. */
+.testimonial-location {
+  margin: 6px 0 0;
+  font-family: var(--display);
+  text-transform: uppercase;
+  font-weight: 700;
+  font-size: 13px;
+  letter-spacing: 1.4px;
+  color: var(--text-muted);
+}
+
 /* Oversized decorative quote mark; line-height:0 keeps it from claiming a full
    line box, so it tucks just above the quote instead of pushing it down. */
 .testimonial-qmark {

@@ -79,12 +79,12 @@ export const TESTIMONIALS: Testimonial[] = [
     id: '82nd-bar-and-grill',
     headline: `Stanley's Corner`,
     businessName: `Stanley's Corner, 82nd Bar and Grill, Ace Tavern 2`,
-    location: 'Portland, OR',
+    location: 'Gladstone, OR',
     owner: '88 Badillo Inc.',
     body: `I've partnered with NW Entertainment & Music for the past 15 years across multiple of my locations. The quality of service is what has kept the relationship intact. Very reliable, equipment always kept up to date with maintenance and professional service. For any business managing multiple venues, NW Entertainment & Music offers a rare combination of reliability, adaptability, and genuine professionalism. Fifteen years in, I still don't hesitate to recommend them.`,
     images: [
-      { src: stanley_1, alt: `Pinball installed at Stanley's Corner` },
       { src: stanley_2, alt: `Pool tables installed at Stanley's Corner` },
+      { src: stanley_1, alt: `Pinball installed at Stanley's Corner` },
     ],
   },
 ]

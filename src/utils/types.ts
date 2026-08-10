@@ -12,6 +12,8 @@ import silver_star_1 from '../assets/testimonials/silver_star/silver_star_1.webp
 import silver_star_2 from '../assets/testimonials/silver_star/silver_star_2.webp'
 import stanley_1 from '../assets/testimonials/stanleys/stanley_1.webp'
 import stanley_2 from '../assets/testimonials/stanleys/stanley_2.webp'
+import fosters_1 from '../assets/testimonials/fosters/fosters_1.webp'
+import fosters_2 from '../assets/testimonials/fosters/fosters_2.webp'
 
 export type Page = {
   id: string
@@ -85,6 +87,18 @@ export const TESTIMONIALS: Testimonial[] = [
     images: [
       { src: stanley_2, alt: `Pool tables installed at Stanley's Corner` },
       { src: stanley_1, alt: `Pinball installed at Stanley's Corner` },
+    ],
+  },
+  {
+    id: 'foster-gardens-tavern',
+    headline: `Foster Gardens Tavern`,
+    businessName: `Foster Gardens Tavern`,
+    location: 'Portland, OR',
+    owner: 'Mark Wittmeyer',
+    body: `I happily recommend Blake with NW Entertainment & Music. Over the last 13 years he has proven to be responsive, professional, reliable, and gives 100%. Thank you for providing valuable service.`,
+    images: [
+      { src: fosters_1, alt: `Inside of Foster Gardens Tavern` },
+      { src: fosters_2, alt: `Jukebox installed at Foster Gardens Tavern` },
     ],
   },
 ]
